@@ -1,0 +1,23 @@
+.error {
+  color: var(--red);
+}
+
+.notice {
+  color: var(--orange);
+}
+
+form {
+  display: inline-block;
+  margin-bottom: 4rem; /* To balance with the logo */
+}
+
+button {
+  border: none;
+  border-radius: 3px;
+  background-color: var(--black);
+  padding: 0.5rem 1rem;
+
+  color: var(--white);
+
+  cursor: pointer;
+}

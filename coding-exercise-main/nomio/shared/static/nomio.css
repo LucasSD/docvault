@@ -1,0 +1,23 @@
+:root {
+  --black: #171717;
+  --white: #ffffff;
+  --red: #e51515;
+  --orange: #ffa600;
+  --green: #29a37a;
+  --blue: #293eff;
+}
+
+html {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--white);
+
+  font-family: "Inter", sans-serif;
+  color: var(--black);
+  text-align: center;
+}
