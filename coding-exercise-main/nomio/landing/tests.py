@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-
 class HomeTests(TestCase):
     def test_home_renders_on_get(self):
         response = self.client.get("")
