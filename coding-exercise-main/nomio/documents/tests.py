@@ -1,6 +1,7 @@
 from datetime import date
 from unittest import mock
 
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.test import TestCase
@@ -34,7 +35,6 @@ class LegalDocModelTests(TestCase):
         test_legal_doc_no_user = LegalDoc.objects.get(id=2)
         self.assertEqual(test_legal_doc_no_user.user, None)
 
-
     def test_object_name(self):  # test __str__
         test_legal_doc = LegalDoc.objects.get(id=1)
         test_file = mock.MagicMock(spec=File)
@@ -42,5 +42,63 @@ class LegalDocModelTests(TestCase):
         test_legal_doc.doc = test_file
         expected_object_name = f"{test_legal_doc.doc.name} {test_legal_doc.user} {test_legal_doc.up_date}"
         self.assertEqual(expected_object_name, str(test_legal_doc))
+
+class LegalDocListViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User.objects.create_user(username="johnsmith", password="password")
+        test_file_pdf = mock.MagicMock(spec=File)
+        test_file_pdf.name = "test.pdf"
+        test_file_jpg = mock.MagicMock(spec=File)
+        test_file_jpg.name = "test.jpg"
+        LegalDoc.objects.create(doc=test_file_pdf, user=User.objects.get(id=1))
+        for i in range(9):
+            LegalDoc.objects.create(doc=test_file_jpg)
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get("/documents/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse("index"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse("index"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "documents/legaldoc_list.html")
+        self.assertTemplateUsed(response, "base.html")
+
+    def test_pagination_is_eight(self):
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        self.assertTrue(response.context['is_paginated'] == True)
+        self.assertEqual(len(response.context['legaldoc_list']), 8)
+
+    def test_lists_all_legaldocs(self):
+        # Get second page and confirm it has (exactly) 2 remaining objects
+        response = self.client.get(reverse('index')+'?page=2')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        self.assertTrue(response.context['is_paginated'] == True)
+        self.assertEqual(len(response.context['legaldoc_list']), 2)
+
+    def test_context(self):
+        response1 = self.client.get(reverse("index"))
+        self.assertEqual(response1.status_code, 200)
+        test_legaldoc1 = response1.context['legaldoc_list'][0]
+        test_legaldoc2 = response1.context['legaldoc_list'][1]
+        self.assertEqual(date.today(), test_legaldoc1.up_date)
+        self.assertEqual("johnsmith", str(test_legaldoc1.user))
+        self.assertEqual("test.pdf", test_legaldoc1.doc.name)
+        self.assertEqual("test.jpg", test_legaldoc2.doc.name)
+        self.assertEqual(None, test_legaldoc2.user)
+        
+        response2 = self.client.get(reverse('index')+'?page=2')
+        self.assertEqual(response2.status_code, 200)
+        test_legaldoc = response2.context['legaldoc_list'][0]
+        self.assertEqual(None, test_legaldoc.user) 
+        self.assertEqual(date.today(), test_legaldoc.up_date)
 
 

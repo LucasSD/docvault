@@ -13,8 +13,8 @@ def index(request: HttpRequest) -> HttpResponse:
 
 class LegalDocListView(generic.ListView):
     model = LegalDoc
-    paginate_by = 7
+    paginate_by = 8
 
     def get_queryset(self):
-        # change this to filter for logged in User only
+        # change this to filter for logged in User only?
         return LegalDoc.objects.all()
