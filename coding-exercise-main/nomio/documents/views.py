@@ -28,5 +28,7 @@ def upload(request):
             upload_conf.doc = request.FILES['doc']
             upload_conf.save()
             return render(request, 'documents/confirm_upload.html', {'upload_conf': upload_conf})
-    context = {"form": form,}
-    return render(request, 'documents/user_upload.html', context)
+    else: 
+        context = {"form": form,}
+        return render(request, 'documents/user_upload.html', context)
+
