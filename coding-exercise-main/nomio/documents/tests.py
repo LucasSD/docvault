@@ -56,21 +56,29 @@ class LegalDocListViewTest(TestCase):
         for i in range(9):
             LegalDoc.objects.create(doc=test_file_jpg)
 
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse("index"))
+        self.assertRedirects(response, '/?next=/documents/')
+
     def test_view_url_exists_at_desired_location(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get("/documents/")
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "documents/legaldoc_list.html")
         self.assertTemplateUsed(response, "base.html")
 
     def test_pagination_is_eight(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
@@ -79,6 +87,7 @@ class LegalDocListViewTest(TestCase):
 
     def test_lists_all_legaldocs(self):
         # Get second page and confirm it has (exactly) 2 remaining objects
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse('index')+'?page=2')
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
@@ -86,6 +95,7 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual(len(response.context['legaldoc_list']), 2)
 
     def test_context(self):
+        self.client.login(username='johnsmith', password='password')
         response1 = self.client.get(reverse("index"))
         self.assertEqual(response1.status_code, 200)
         test_legaldoc1 = response1.context['legaldoc_list'][0]
@@ -105,23 +115,32 @@ class LegalDocListViewTest(TestCase):
 class UploadViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        pass
+        User.objects.create_user(username='johnsmith', password='password')
 
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse("upload"))
+        self.assertRedirects(response, '/?next=/documents/upload/')
+    
     def test_view_url_exists_at_desired_location(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get("/documents/upload/")
+        self.assertEqual(str(response.context['user']), 'johnsmith')
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("upload"))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("upload"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "documents/user_upload.html")
         self.assertTemplateUsed(response, "base.html")
 
     def test_initial_form_context(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("upload"))
         self.assertEqual(response.status_code, 200)
 
@@ -130,6 +149,7 @@ class UploadViewTest(TestCase):
         self.assertEqual({}, test_form.initial)
        
     def test_form_context(self):
+        self.client.login(username='johnsmith', password='password')
         test_file = mock.MagicMock(spec=File)
         test_file.name = "test.img"
 

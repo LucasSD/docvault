@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views import generic
 from django.urls import reverse_lazy
+
 
 from .models import LegalDoc
 from .forms import UserUploadForm
@@ -11,7 +13,7 @@ from .forms import UserUploadForm
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, "documents/index.html")'''
 
-class LegalDocListView(generic.ListView):
+class LegalDocListView(LoginRequiredMixin, generic.ListView):
     model = LegalDoc
     paginate_by = 8
 
@@ -19,6 +21,7 @@ class LegalDocListView(generic.ListView):
         # change this to filter for logged in User only?
         return LegalDoc.objects.all()
 
+@login_required
 def upload(request):
     form = UserUploadForm()
     if request.method == 'POST':
