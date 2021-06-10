@@ -7,6 +7,7 @@ from django.core.files import File
 from django.test import TestCase
 
 from .models import LegalDoc
+from .forms import UserUploadForm
 
 class LegalDocModelTests(TestCase):
     @classmethod
@@ -101,4 +102,46 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual(None, test_legaldoc.user) 
         self.assertEqual(date.today(), test_legaldoc.up_date)
 
+class UploadViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        pass
 
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get("/documents/upload/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse("upload"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse("upload"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "documents/user_upload.html")
+        self.assertTemplateUsed(response, "base.html")
+
+    def test_initial_form_context(self):
+        response = self.client.get(reverse("upload"))
+        self.assertEqual(response.status_code, 200)
+
+        test_form = response.context["form"]
+        self.assertIn("form", response.context)
+        self.assertEqual({}, test_form.initial)
+       
+    def test_form_context(self):
+        test_file = mock.MagicMock(spec=File)
+        test_file.name = "test.img"
+
+        form_entry = {
+            "doc": test_file,
+        }
+
+        response = self.client.post(reverse("upload"), data=form_entry)
+        self.assertEqual(response.status_code, 200)
+        test_legaldoc = LegalDoc.objects.get(id=1)
+        self.assertEqual(LegalDoc.objects.count(), 1)
+        self.assertEqual(test_file.name, test_legaldoc.doc.name)
+        self.assertEqual(date.today(), test_legaldoc.up_date)
+        self.assertEqual(None, test_legaldoc.user)
+        

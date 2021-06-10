@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to Nomio<br>Hello {{ upload_conf.user }}</h1>
+    <p class="lead">Your file has been uploaded</p>
+    <hr class="my-4">
+    <p>
+    {{ upload_conf.doc.url }}<BR>
+    </p>
+</div>
+
+{% endblock %}
