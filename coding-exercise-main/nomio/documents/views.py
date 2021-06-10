@@ -19,7 +19,7 @@ class LegalDocListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         # change this to filter for logged in User only?
-        return LegalDoc.objects.all()
+        return LegalDoc.objects.filter(user=self.request.user).order_by('-up_date')
 
 @login_required
 def upload(request):
@@ -29,6 +29,7 @@ def upload(request):
         if form.is_valid():
             upload_conf = form.save(commit=False)
             upload_conf.doc = request.FILES['doc']
+            upload_conf.user = request.user
             upload_conf.save()
             return render(request, 'documents/confirm_upload.html', {'upload_conf': upload_conf})
     else: 

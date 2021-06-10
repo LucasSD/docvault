@@ -148,7 +148,7 @@ class UploadViewTest(TestCase):
         self.assertIn("form", response.context)
         self.assertEqual({}, test_form.initial)
        
-    def test_form_context(self):
+    def test_form_post(self):
         self.client.login(username='johnsmith', password='password')
         test_file = mock.MagicMock(spec=File)
         test_file.name = "test.img"
@@ -163,5 +163,5 @@ class UploadViewTest(TestCase):
         self.assertEqual(LegalDoc.objects.count(), 1)
         self.assertEqual(test_file.name, test_legaldoc.doc.name)
         self.assertEqual(date.today(), test_legaldoc.up_date)
-        self.assertEqual(None, test_legaldoc.user)
+        self.assertEqual("johnsmith", str(test_legaldoc.user))
         
