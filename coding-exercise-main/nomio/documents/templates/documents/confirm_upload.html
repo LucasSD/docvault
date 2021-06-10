@@ -1,0 +1,12 @@
+{% extends 'documents/user_upload.html' %}
+{% block replace %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to Nomio<br>Hello {{ user_pr.fname }}</h1>
+    <p class="lead">Your file has been uploaded</p>
+    <hr class="my-4">
+    <p>
+    {{ upload_conf.doc.url }}<BR>
+    </p>
+</div>
+
+{% endblock %}

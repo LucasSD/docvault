@@ -3,7 +3,7 @@ from django.db import models
 
 
 class LegalDoc(models.Model):
-     doc = models.FileField(upload_to='')
+     doc = models.FileField()
      up_date = models.DateField(auto_now_add=True)
      user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
