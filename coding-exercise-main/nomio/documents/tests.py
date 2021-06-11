@@ -1,5 +1,6 @@
 from datetime import date
 from unittest import mock
+from unittest.case import addModuleCleanup
 
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -9,7 +10,7 @@ from django.test import TestCase
 from .models import LegalDoc
 from .forms import UserUploadForm
 
-class LegalDocModelTests(TestCase):
+class LegalDocModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         User.objects.create_user(username="johnsmith", password="password")
@@ -43,13 +44,14 @@ class LegalDocListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         User.objects.create_user(username="johnsmith", password="password")
-        test_file_pdf = mock.MagicMock(spec=File)
-        test_file_pdf.name = "test.pdf"
-        test_file_jpg = mock.MagicMock(spec=File)
-        test_file_jpg.name = "test.jpg"
-        LegalDoc.objects.create(doc=test_file_pdf, user=User.objects.get(id=1))
-        for i in range(9):
-            LegalDoc.objects.create(doc=test_file_jpg, user=User.objects.get(id=1))
+        test_file_pdf = mock.MagicMock(spec=File, name="test.pdf")
+        test_file_jpg = mock.MagicMock(spec=File, name="test.jpg")
+        LegalDoc.objects.create(user=User.objects.get(id=1))
+        LegalDoc.objects.filter(id=1).update(doc=test_file_pdf)
+ 
+        for i in range(2, 11):
+            LegalDoc.objects.create(user=User.objects.get(id=1))
+            LegalDoc.objects.filter(id=i).update(doc=test_file_jpg)
 
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse("index"))
@@ -97,9 +99,8 @@ class LegalDocListViewTest(TestCase):
         test_legaldoc2 = response1.context['legaldoc_list'][1]
         self.assertEqual(date.today(), test_legaldoc1.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc1.user))
-        self.assertEqual("test.pdf", test_legaldoc1.doc.name)
-        self.assertEqual("test.jpg", test_legaldoc2.doc.name)
-        
+        self.assertIn("test.pdf", str(test_legaldoc1.doc))
+        self.assertIn("test.jpg", str(test_legaldoc2.doc))
         response2 = self.client.get(reverse('index')+'?page=2')
         self.assertEqual(response2.status_code, 200)
         test_legaldoc = response2.context['legaldoc_list'][0]
@@ -151,11 +152,13 @@ class UploadViewTest(TestCase):
             "doc": test_file,
         }
 
-        response = self.client.post(reverse("upload"), data=form_entry)
-        self.assertEqual(response.status_code, 200)
+        mockresponse = mock.MagicMock()
+        mockresponse = self.client.post(reverse("upload"), data=form_entry)
+        self.assertEqual(mockresponse.status_code, 200)
         test_legaldoc = LegalDoc.objects.get(id=1)
         self.assertEqual(LegalDoc.objects.count(), 1)
         self.assertEqual(test_file.name, test_legaldoc.doc.name)
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
+        
         

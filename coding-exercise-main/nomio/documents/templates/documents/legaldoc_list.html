@@ -2,57 +2,17 @@
 {% load static %}
 
 {% block body %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-  <a class="navbar-brand" href="#"></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="true" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#"><span class="sr-only">(current)</span></a>
-      </li>
-      <h1 class="text-primary">Upload, View and Download Your Nomio Documents</h1>
-    </ul>
-    <span class="navbar-text text-primary">
-    </span>
-  </div>
-</nav>
+<h1>Upload, View and Download Your Nomio Documents</h1>
 <body>
-
-<div class="modal fade" tabindex="-1" role="dialog" id="modal" >
-  <div class="modal-dialog" role="document">
-    <div class="modal-content"></div>
-  </div>
-</div>
-
-
-
-<div class="col-md-10 col-sm-4 col-xs-4" style="padding-top: 60px">
-<div id="content" class="p-8 p-md-5 pt-5">
-    <div class="col-md-12 col-sm-12 col-xs-10">
-
-
-    	<div id="content-wrapper">
-        <div class="container-fluid">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="">List Of Uploaded Files</a>
-                </li>
             </ol>
-            <div class="card mb-3">
-                <div class="card-header">
-                    <i class="fas fa-table"></i>
                     Your Nomio Documents
-                </div>
-                <div class="card-body">
 
             <!-- Breadcrumbs-->
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="#"></a>
+                    <a href="{% static 'landing/home.css' %}"></a>
 
-                    <a  class="btn btn-sm btn-success" href="{% url 'upload' %}" style="padding: 8px; float: right; background-color: green; color: white;">Upload</a>
+                    <a  class="btn btn-sm btn-success" href="{% url 'upload' %}" style="padding: 8px; float: right; background-color: black; color: white;">Upload</a>
                 </li>
             </ol>
              {% for message in messages %}
@@ -79,12 +39,10 @@
                             </thead>
                             <tbody>
 
-
                             	<!-- if and for loop -->
                             	{% if legaldoc_list %}
                             	  {% for file in legaldoc_list %}
 
-                        
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
 
@@ -94,12 +52,12 @@
                                     {% else %}
                                     <span class="text-muted">No cover</span>
                                     {% endif %}
-                                   </td>
+                                    </td>
 
                                    <!-- file upload date and user -->
                                     <td>{{ file.up_date }}</td>
                                     <td>{{ file.user }}</td>
-                                     <td>
+                                    <td>
 
                                     {% if file.doc %}
                                       <a href="{{ file.doc.url }}" class="btn btn-outline-primary" target="_blank">
@@ -107,16 +65,16 @@
                                     {% else %}
                                     <span class="text-muted">No File</span>
                                     {% endif %}
-                                  </td>
+                                    </td>
 
-                                  <td>
+                                    <td>
                                     {% if file.doc %}
                                       <a href="{{ file.doc.url }}" download class="btn btn-outline-success">
                                     Download File</a>
                                     {% else %}
                                     <span class="text-muted">No File</span>
                                     {% endif %}
-                                  </td> 
+                                    </td> 
                                 </tr>
 
                                 <!-- end for and if -->
@@ -127,23 +85,4 @@
 
 {% endblock %}
 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  </tbody>
-</table>
-
-        </div>
-    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  
-
 </body>
-</html>
-</body>
-</html>

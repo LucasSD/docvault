@@ -9,8 +9,22 @@
   {% endblock %}
 </head>
 
+{% block sidebar %}
+<ul class="sidebar-nav">
+  <li><a href="{% url 'index' %}">My Documents</a></li>
+  <li><a href="{% url 'upload' %}">Upload</a></li>
+</ul>
+{% if user.is_authenticated %}
+<li>Welcome {{ user.get_username }}</li>
+<li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+{% endif %} 
+</ul>
+{% endblock %}
+
 <body>
   {% block body %}{% endblock %}
+
+
 
   {% block pagination %}
   {% if is_paginated %}
