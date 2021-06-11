@@ -14,7 +14,6 @@ class LegalDocModelTests(TestCase):
     def setUpTestData(cls):
         User.objects.create_user(username="johnsmith", password="password")
         LegalDoc.objects.create(user=User.objects.get(id=1))
-        LegalDoc.objects.create()
         
     def test_up_date_field(self):
         test_legal_doc = LegalDoc.objects.get(id=1)
@@ -31,10 +30,6 @@ class LegalDocModelTests(TestCase):
     def test_user_field(self):  # test ForeignKey Field
         test_legal_doc = LegalDoc.objects.get(id=1)
         self.assertEqual(str(test_legal_doc.user), "johnsmith")
-
-        # tests null=True
-        test_legal_doc_no_user = LegalDoc.objects.get(id=2)
-        self.assertEqual(test_legal_doc_no_user.user, None)
 
     def test_object_name(self):  # test __str__
         test_legal_doc = LegalDoc.objects.get(id=1)
@@ -54,23 +49,31 @@ class LegalDocListViewTest(TestCase):
         test_file_jpg.name = "test.jpg"
         LegalDoc.objects.create(doc=test_file_pdf, user=User.objects.get(id=1))
         for i in range(9):
-            LegalDoc.objects.create(doc=test_file_jpg)
+            LegalDoc.objects.create(doc=test_file_jpg, user=User.objects.get(id=1))
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse("index"))
+        self.assertRedirects(response, '/?next=/documents/')
 
     def test_view_url_exists_at_desired_location(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get("/documents/")
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "documents/legaldoc_list.html")
         self.assertTemplateUsed(response, "base.html")
 
     def test_pagination_is_eight(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
@@ -79,6 +82,7 @@ class LegalDocListViewTest(TestCase):
 
     def test_lists_all_legaldocs(self):
         # Get second page and confirm it has (exactly) 2 remaining objects
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse('index')+'?page=2')
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
@@ -86,6 +90,7 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual(len(response.context['legaldoc_list']), 2)
 
     def test_context(self):
+        self.client.login(username='johnsmith', password='password')
         response1 = self.client.get(reverse("index"))
         self.assertEqual(response1.status_code, 200)
         test_legaldoc1 = response1.context['legaldoc_list'][0]
@@ -94,34 +99,42 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual("johnsmith", str(test_legaldoc1.user))
         self.assertEqual("test.pdf", test_legaldoc1.doc.name)
         self.assertEqual("test.jpg", test_legaldoc2.doc.name)
-        self.assertEqual(None, test_legaldoc2.user)
         
         response2 = self.client.get(reverse('index')+'?page=2')
         self.assertEqual(response2.status_code, 200)
         test_legaldoc = response2.context['legaldoc_list'][0]
-        self.assertEqual(None, test_legaldoc.user) 
+        self.assertEqual('johnsmith', str(test_legaldoc.user)) 
         self.assertEqual(date.today(), test_legaldoc.up_date)
 
 class UploadViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        pass
+        User.objects.create_user(username='johnsmith', password='password')
 
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse("upload"))
+        self.assertRedirects(response, '/?next=/documents/upload/')
+    
     def test_view_url_exists_at_desired_location(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get("/documents/upload/")
+        self.assertEqual(str(response.context['user']), 'johnsmith')
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("upload"))
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("upload"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "documents/user_upload.html")
         self.assertTemplateUsed(response, "base.html")
 
     def test_initial_form_context(self):
+        self.client.login(username='johnsmith', password='password')
         response = self.client.get(reverse("upload"))
         self.assertEqual(response.status_code, 200)
 
@@ -129,7 +142,8 @@ class UploadViewTest(TestCase):
         self.assertIn("form", response.context)
         self.assertEqual({}, test_form.initial)
        
-    def test_form_context(self):
+    def test_form_post(self):
+        self.client.login(username='johnsmith', password='password')
         test_file = mock.MagicMock(spec=File)
         test_file.name = "test.img"
 
@@ -143,5 +157,5 @@ class UploadViewTest(TestCase):
         self.assertEqual(LegalDoc.objects.count(), 1)
         self.assertEqual(test_file.name, test_legaldoc.doc.name)
         self.assertEqual(date.today(), test_legaldoc.up_date)
-        self.assertEqual(None, test_legaldoc.user)
+        self.assertEqual("johnsmith", str(test_legaldoc.user))
         
