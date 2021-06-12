@@ -10,7 +10,7 @@
             <!-- Breadcrumbs-->
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="{% static 'landing/home.css' %}"></a>
+                    <a href="{% static 'nomio.css' %}"></a>
 
                     <a  class="btn btn-sm btn-success" href="{% url 'upload' %}" style="padding: 8px; float: right; background-color: black; color: white;">Upload</a>
                 </li>
@@ -30,7 +30,7 @@
                             <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Cover</th>
+                                <th>Filename</th>
                                 <th>Date Uploaded</th>
                                 <th>Owner</th>
                                 <th>View</th>
@@ -47,11 +47,9 @@
                                     <td>{{ forloop.counter }}</td>
 
                                     <td>
-                                    {% if file.cover %}
-                                    <img src="{{ file.cover.url }}" alt="{{ file.name }}" style="width:100px; height: 100px">
-                                    {% else %}
-                                    <span class="text-muted">No cover</span>
-                                    {% endif %}
+                                    
+                                    {{ file.doc.name }}
+
                                     </td>
 
                                    <!-- file upload date and user -->
