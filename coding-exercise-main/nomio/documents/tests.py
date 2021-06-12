@@ -152,9 +152,8 @@ class UploadViewTest(TestCase):
             "doc": test_file,
         }
 
-        mockresponse = mock.MagicMock()
-        mockresponse = self.client.post(reverse("upload"), data=form_entry)
-        self.assertEqual(mockresponse.status_code, 200)
+        response = self.client.post(reverse("upload"), data=form_entry)
+        self.assertEqual(response.status_code, 200)
         test_legaldoc = LegalDoc.objects.get(id=1)
         self.assertEqual(LegalDoc.objects.count(), 1)
         self.assertEqual(test_file.name, test_legaldoc.doc.name)
