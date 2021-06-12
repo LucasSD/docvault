@@ -17,9 +17,10 @@
     <br>
     <a href="{% url 'upload' %}">Upload</a>
     {% if user.is_authenticated %}
-   
-<p>Logged In: {{ user.get_username }}</p>
+    <br>
     <a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+<p>Logged In: {{ user.get_username }}</p>
+    
     {% endif %} 
   </div>
 
