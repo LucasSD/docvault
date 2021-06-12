@@ -3,16 +3,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views import generic
-from django.urls import reverse_lazy
 
-
-from .models import LegalDoc
 from .forms import UserUploadForm
-
-"""
-@login_required
-def index(request: HttpRequest) -> HttpResponse:
-    return render(request, "documents/index.html")"""
+from .models import LegalDoc
 
 
 class LegalDocListView(LoginRequiredMixin, generic.ListView):
@@ -22,7 +15,6 @@ class LegalDocListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         # change this to filter for logged in User only?
         return LegalDoc.objects.filter(user=self.request.user).order_by("-up_date")
-
 
 @login_required
 def upload(request):

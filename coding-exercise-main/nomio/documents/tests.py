@@ -2,13 +2,13 @@ from datetime import date
 from unittest import mock
 from unittest.case import addModuleCleanup
 
-from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.test import TestCase
+from django.urls import reverse
 
-from .models import LegalDoc
 from .forms import UserUploadForm
+from .models import LegalDoc
 
 
 class LegalDocModelTest(TestCase):
