@@ -1,5 +1,6 @@
 from datetime import date
 from unittest import mock
+from unittest.case import addModuleCleanup
 
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -9,7 +10,7 @@ from django.test import TestCase
 from .models import LegalDoc
 from .forms import UserUploadForm
 
-class LegalDocModelTests(TestCase):
+class LegalDocModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         User.objects.create_user(username="johnsmith", password="password")
@@ -45,8 +46,10 @@ class LegalDocListViewTest(TestCase):
         User.objects.create_user(username="johnsmith", password="password")
         test_file_pdf = mock.MagicMock(spec=File)
         test_file_pdf.name = "test.pdf"
+        test_file_pdf.read.return_value = "fakecontents"
         test_file_jpg = mock.MagicMock(spec=File)
         test_file_jpg.name = "test.jpg"
+        test_file_jpg.read.return_value = "fakecontents"
         LegalDoc.objects.create(doc=test_file_pdf, user=User.objects.get(id=1))
         for i in range(9):
             LegalDoc.objects.create(doc=test_file_jpg, user=User.objects.get(id=1))
@@ -99,7 +102,6 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual("johnsmith", str(test_legaldoc1.user))
         self.assertEqual("test.pdf", test_legaldoc1.doc.name)
         self.assertEqual("test.jpg", test_legaldoc2.doc.name)
-        
         response2 = self.client.get(reverse('index')+'?page=2')
         self.assertEqual(response2.status_code, 200)
         test_legaldoc = response2.context['legaldoc_list'][0]
@@ -158,4 +160,5 @@ class UploadViewTest(TestCase):
         self.assertEqual(test_file.name, test_legaldoc.doc.name)
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
+        
         
