@@ -44,14 +44,15 @@ class LegalDocListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         User.objects.create_user(username="johnsmith", password="password")
-        test_file_pdf = mock.MagicMock(spec=File, name="test.pdf")
-        test_file_jpg = mock.MagicMock(spec=File, name="test.jpg")
-        LegalDoc.objects.create(user=User.objects.get(id=1))
-        LegalDoc.objects.filter(id=1).update(doc=test_file_pdf)
- 
-        for i in range(2, 11):
-            LegalDoc.objects.create(user=User.objects.get(id=1))
-            LegalDoc.objects.filter(id=i).update(doc=test_file_jpg)
+        test_file_pdf = mock.MagicMock(spec=File)
+        test_file_pdf.name = "test.pdf"
+        test_file_pdf.read.return_value = "fakecontents"
+        test_file_jpg = mock.MagicMock(spec=File)
+        test_file_jpg.name = "test.jpg"
+        test_file_jpg.read.return_value = "fakecontents"
+        LegalDoc.objects.create(doc=test_file_pdf, user=User.objects.get(id=1))
+        for i in range(9):
+            LegalDoc.objects.create(doc=test_file_jpg, user=User.objects.get(id=1))
 
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse("index"))
@@ -99,8 +100,8 @@ class LegalDocListViewTest(TestCase):
         test_legaldoc2 = response1.context['legaldoc_list'][1]
         self.assertEqual(date.today(), test_legaldoc1.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc1.user))
-        self.assertIn("test.pdf", str(test_legaldoc1.doc))
-        self.assertIn("test.jpg", str(test_legaldoc2.doc))
+        self.assertEqual("test.pdf", test_legaldoc1.doc.name)
+        self.assertEqual("test.jpg", test_legaldoc2.doc.name)
         response2 = self.client.get(reverse('index')+'?page=2')
         self.assertEqual(response2.status_code, 200)
         test_legaldoc = response2.context['legaldoc_list'][0]
