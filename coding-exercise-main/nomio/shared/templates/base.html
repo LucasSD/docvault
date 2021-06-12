@@ -11,12 +11,14 @@
 
 <body>
 
-  {% block sidebar %}
+  {% block menu %}
   <div class="sidenav">
     <a href="{% url 'index' %}">My Documents</a>
+    <br>
     <a href="{% url 'upload' %}">Upload</a>
     {% if user.is_authenticated %}
-<li>Welcome {{ user.get_username }}</li>
+   
+<p>Logged In: {{ user.get_username }}</p>
     <a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
     {% endif %} 
   </div>
@@ -24,7 +26,7 @@
 {% endblock %}
 
 {% block body %}{% endblock %}
-  
+</br>
   {% block pagination %}
   {% if is_paginated %}
       <div class="pagination">
