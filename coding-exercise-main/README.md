@@ -1,4 +1,5 @@
-domain-driven naming, some test redundant?, have not tested templates
+domain-driven naming, some tests redundant?, have not tested templates, I have favoured testing over extra features. 
+No type annotation 
 
 ## Getting Started
 

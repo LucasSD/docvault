@@ -5,4 +5,4 @@ from .models import LegalDoc
 
 @admin.register(LegalDoc)
 class LegalDocAdmin(admin.ModelAdmin):
-    pass
+    """Encapsulate all admin options and functionality for LegalDoc model."""
