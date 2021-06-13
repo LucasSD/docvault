@@ -10,9 +10,10 @@ class LegalDoc(models.Model):
     user = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
 
     class Meta:
+        # this orders the database and avoids pagination ordering warnings
         ordering = [
-            "id"
-        ]  # this orders the database and avoids ordering warnings related to pagination
+            "-up_date"
+        ]  
 
     def __str__(self):
         return " ".join([self.doc.name, str(self.user), str(self.up_date)])

@@ -13,7 +13,7 @@ class LegalDocListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         # change this to filter for logged in User only?
-        return LegalDoc.objects.filter(user=self.request.user).order_by("-up_date")
+        return LegalDoc.objects.filter(user=self.request.user)
 
 @login_required
 def upload(request):
