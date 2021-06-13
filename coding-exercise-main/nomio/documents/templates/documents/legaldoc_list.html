@@ -17,59 +17,61 @@
                     color: var(--white);
                   
                     cursor: pointer;">Upload</a>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="15">
-                            {% if legaldoc_list %}
-                            <thead>
-                            <tr>
-                                <th>Filename</th>
-                                <th>Date Uploaded</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            	
-                            	  {% for file in legaldoc_list %}
 
-                                <tr>
-                                    <td>
-                                    
-                                    {{ file.doc.name }}
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="15">
 
-                                    </td>
+            <!--if LegalDocListView returns context variable -->
+            {% if legaldoc_list %}
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Date Uploaded</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- iterate through LegalDocListView variable -->
+                {% for file in legaldoc_list %}
 
-                                   <!-- file upload date -->
-                                    <td>{{ file.up_date }}</td>
-                            
-                                    <td>
-                                
-                                    {% if file.doc %}
-                                      <a href="{{ file.doc.url }}" class="btn btn-outline-primary" target="_blank">
-                                    View File</a>
-                                    {% else %}
-                                    <span class="text-muted">No File</span>
-                                    {% endif %}
-                                    </td>
+                <tr>
+                    <td>
 
-                                    <td>
-                                    {% if file.doc %}
-                                      <a href="{{ file.doc.url }}" download class="btn btn-outline-success">
-                                    Download File</a>
-                                    {% else %}
-                                    <span class="text-muted">No File</span>
-                                    {% endif %}
-                                    </td> 
-                                </tr>
+                        {{ file.doc.name }}
 
-                                {% endfor %}
-                                {% else %}
-                                <p> You have not uploaded any files yet</p>
-                                {% endif %}
-                            </tbody>
-                        </table>
+                    </td>
 
-{% endblock %}
+                    <!-- file upload date -->
+                    <td>{{ file.up_date }}</td>
+
+                    <td>
+
+                        {% if file.doc %}
+                        <a href="{{ file.doc.url }}" class="btn btn-outline-primary" target="_blank">
+                            View File</a>
+                        {% else %}
+                        <span class="text-muted">No File</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if file.doc %}
+                        <a href="{{ file.doc.url }}" download class="btn btn-outline-success">
+                            Download File</a>
+                        {% else %}
+                        <span class="text-muted">No File</span>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% endfor %}
+                {% else %}
+                <p> You have not uploaded any files yet</p>
+                {% endif %}
+            </tbody>
+        </table>
+
+        {% endblock %}
 
 </body>
