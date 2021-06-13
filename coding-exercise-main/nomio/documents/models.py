@@ -5,7 +5,9 @@ from django.db import models
 class LegalDoc(models.Model):
     doc = models.FileField()
     up_date = models.DateField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    # use RESTRICT to avoid unintended data loss  
+    user = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
 
     class Meta:
         ordering = [
