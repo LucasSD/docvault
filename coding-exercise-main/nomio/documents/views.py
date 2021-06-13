@@ -15,6 +15,7 @@ class LegalDocListView(LoginRequiredMixin, generic.ListView):
         # change this to filter for logged in User only?
         return LegalDoc.objects.filter(user=self.request.user)
 
+
 @login_required
 def upload(request):
     form = UserUploadForm()

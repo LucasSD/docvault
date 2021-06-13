@@ -17,41 +17,44 @@ class LegalDocModelTest(TestCase):
 
     def setUp(self):
         self.test_legaldoc = LegalDoc.objects.get(id=1)
-        self.test_file = mock.MagicMock(spec=File)
-        self.test_file.name = "test.pdf"
-        
+
+        # use mocks instead of file system
+        self.mock_file = mock.MagicMock(spec=File)
+        self.mock_file.name = "test.pdf"
+
     def test_up_date_field(self):
         self.assertEqual(self.test_legaldoc.up_date, date.today())
 
     def test_doc_field(self):
-        self.test_legaldoc.doc = self.test_file
-        self.assertEqual(self.test_legaldoc.doc.name, self.test_file.name)
+        # TODO: Add to doc field when test_legaldoc created 
+        # (this creates different mock file names which I am yet to resolve).
+        # If resolved, the line below will be redundant.
+        self.test_legaldoc.doc = self.mock_file
+        self.assertEqual(self.test_legaldoc.doc.name, self.mock_file.name)
         self.assertEqual(self.test_legaldoc.doc.url, "/media/test.pdf")
 
-    def test_user_field(self):  # test ForeignKey Field
+    def test_user_field(self): 
         self.assertEqual(str(self.test_legaldoc.user), "johnsmith")
 
-    def test_object_name(self):  # test __str__
-        self.test_legaldoc.doc = self.test_file
-        expected_object_name = (
-            f"{self.test_legaldoc.doc.name} {self.test_legaldoc.user} {self.test_legaldoc.up_date}"
-        )
-        self.assertEqual(expected_object_name, str(self.test_legaldoc))
+    def test_obj_name(self):  # test __str__
+        self.test_legaldoc.doc = self.mock_file
+        expected_obj_name = f"{self.test_legaldoc.doc.name} {self.test_legaldoc.user} {self.test_legaldoc.up_date}"
+        self.assertEqual(expected_obj_name, str(self.test_legaldoc))
 
 
 class LegalDocListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         User.objects.create_user(username="johnsmith", password="password")
-        test_file_pdf = mock.MagicMock(spec=File)
-        test_file_pdf.name = "test.pdf"
-        test_file_pdf.read.return_value = "fakecontents"
-        test_file_jpg = mock.MagicMock(spec=File)
-        test_file_jpg.name = "test.jpg"
-        test_file_jpg.read.return_value = "fakecontents"
-        LegalDoc.objects.create(doc=test_file_pdf, user=User.objects.get(id=1))
+        mock_file_pdf = mock.MagicMock(spec=File)
+        mock_file_pdf.name = "test.pdf"
+        mock_file_pdf.read.return_value = "fakecontents"
+        mock_file_jpg = mock.MagicMock(spec=File)
+        mock_file_jpg.name = "test.jpg"
+        mock_file_jpg.read.return_value = "fakecontents"
+        LegalDoc.objects.create(doc=mock_file_pdf, user=User.objects.get(id=1))
         for i in range(9):
-            LegalDoc.objects.create(doc=test_file_jpg, user=User.objects.get(id=1))
+            LegalDoc.objects.create(doc=mock_file_jpg, user=User.objects.get(id=1))
 
     def setUp(self):
         self.client.force_login(User.objects.get(id=1))
@@ -143,17 +146,17 @@ class UploadViewTest(TestCase):
         self.assertEqual({}, test_form.initial)
 
     def test_form_post(self):
-        test_file = mock.MagicMock(spec=File)
-        test_file.name = "test.img"
+        mock_file = mock.MagicMock(spec=File)
+        mock_file.name = "test.img"
 
         form_entry = {
-            "doc": test_file,
+            "doc": mock_file,
         }
 
         response = self.client.post(reverse("upload"), data=form_entry)
         self.assertEqual(response.status_code, 200)
         test_legaldoc = LegalDoc.objects.get(id=1)
         self.assertEqual(LegalDoc.objects.count(), 1)
-        self.assertEqual(test_file.name, test_legaldoc.doc.name)
+        self.assertEqual(mock_file.name, test_legaldoc.doc.name)
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
