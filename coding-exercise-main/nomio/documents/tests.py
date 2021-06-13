@@ -16,29 +16,27 @@ class LegalDocModelTest(TestCase):
         LegalDoc.objects.create(user=User.objects.get(id=1))
 
     def setUp(self):
-        self.test_legal_doc = LegalDoc.objects.get(id=1)
+        self.test_legaldoc = LegalDoc.objects.get(id=1)
+        self.test_file = mock.MagicMock(spec=File)
+        self.test_file.name = "test.pdf"
         
     def test_up_date_field(self):
-        self.assertEqual(self.test_legal_doc.up_date, date.today())
+        self.assertEqual(self.test_legaldoc.up_date, date.today())
 
     def test_doc_field(self):
-        test_file = mock.MagicMock(spec=File)
-        test_file.name = "test.pdf"
-        self.test_legal_doc.doc = test_file
-        self.assertEqual(self.test_legal_doc.doc.name, test_file.name)
-        self.assertEqual(self.test_legal_doc.doc.url, "/media/test.pdf")
+        self.test_legaldoc.doc = self.test_file
+        self.assertEqual(self.test_legaldoc.doc.name, self.test_file.name)
+        self.assertEqual(self.test_legaldoc.doc.url, "/media/test.pdf")
 
     def test_user_field(self):  # test ForeignKey Field
-        self.assertEqual(str(self.test_legal_doc.user), "johnsmith")
+        self.assertEqual(str(self.test_legaldoc.user), "johnsmith")
 
     def test_object_name(self):  # test __str__
-        test_file = mock.MagicMock(spec=File)
-        test_file.name = "test.pdf"
-        self.test_legal_doc.doc = test_file
+        self.test_legaldoc.doc = self.test_file
         expected_object_name = (
-            f"{self.test_legal_doc.doc.name} {self.test_legal_doc.user} {self.test_legal_doc.up_date}"
+            f"{self.test_legaldoc.doc.name} {self.test_legaldoc.user} {self.test_legaldoc.up_date}"
         )
-        self.assertEqual(expected_object_name, str(self.test_legal_doc))
+        self.assertEqual(expected_object_name, str(self.test_legaldoc))
 
 
 class LegalDocListViewTest(TestCase):
