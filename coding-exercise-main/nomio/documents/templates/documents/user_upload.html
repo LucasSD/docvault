@@ -3,13 +3,12 @@
 
 {% block body %}
 <p class="lead">Please select the file you want to upload </p>
-                <hr class="my-4">
-                <form method="POST" enctype="multipart/form-data">
-                    <!-- csrf Token -->
-                    {% csrf_token %}
-                    <table>
-                        {{ form.as_table }}
-                    </table>
-                    <input type="submit" class="btn btn-primary btn-lg" name="register">
+<hr class="my-4">
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" class="btn btn-primary btn-lg" name="register">
 
 {% endblock %}
