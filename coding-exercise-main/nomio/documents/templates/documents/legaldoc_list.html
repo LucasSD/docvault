@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block body %}
 
 <body>
     <h1>Your Nomio Documents</h1>
-            <!-- Breadcrumbs-->
-            <p class="breadcrumb">
-                <p class="breadcrumb-item">
-                    <a href="{% static 'landing/home.css' %}"></a>
+    <p class="breadcrumb">
+    <p class="breadcrumb-item">
+        <a href="{% static 'landing/home.css' %}"></a>
 
-                    <a  class="btn btn-sm btn-success" href="{% url 'upload' %}" style="border: none;
+        <a class="btn btn-sm btn-success" href="{% url 'upload' %}" style="border: none;
                     border-radius: 3px;
                     background-color: var(--black);
                     padding: 0.5rem 1rem;
@@ -19,19 +17,7 @@
                     color: var(--white);
                   
                     cursor: pointer;">Upload</a>
-                </p>
-            </p>
-
-             {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-            <div class="card mb-3">
-                <div class="card-header text-primary">
-               <i class="fas fa-truck text-secondary"></i>
-                </div>
-                <div class="card-body">
+                    
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="15">
                             {% if legaldoc_list %}
@@ -39,14 +25,11 @@
                             <tr>
                                 <th>Filename</th>
                                 <th>Date Uploaded</th>
-                                <th>Owner</th>
                                 <th></th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-
-                            	<!-- if and for loop -->
                             	
                             	  {% for file in legaldoc_list %}
 
@@ -57,9 +40,9 @@
 
                                     </td>
 
-                                   <!-- file upload date and user -->
+                                   <!-- file upload date -->
                                     <td>{{ file.up_date }}</td>
-                                    <td>{{ file.user }}</td>
+                            
                                     <td>
                                 
                                     {% if file.doc %}
@@ -80,7 +63,6 @@
                                     </td> 
                                 </tr>
 
-                                <!-- end for and if -->
                                 {% endfor %}
                                 {% else %}
                                 <p> You have not uploaded any files yet</p>
