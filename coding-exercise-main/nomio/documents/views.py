@@ -12,7 +12,6 @@ class LegalDocListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 8
 
     def get_queryset(self):
-        # change this to filter for logged in User only?
         return LegalDoc.objects.filter(user=self.request.user)
 
 
@@ -26,9 +25,7 @@ def upload(request):
             upload_conf.doc = request.FILES["doc"]
             upload_conf.user = request.user
             upload_conf.save()
-            return render(
-                request, "documents/confirm_upload.html", {"upload_conf": upload_conf}
-            )
+            return render(request, "documents/confirm_upload.html")
     else:
         context = {
             "form": form,

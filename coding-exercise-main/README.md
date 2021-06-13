@@ -1,4 +1,4 @@
-domain-driven naming, 
+domain-driven naming, some test redundant?, have not tested templates
 
 ## Getting Started
 
