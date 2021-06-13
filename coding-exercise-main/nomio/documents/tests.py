@@ -14,18 +14,15 @@ class LegalDocModelTest(TestCase):
     def setUpTestData(cls):
         User.objects.create_user(username="johnsmith", password="password")
         LegalDoc.objects.create(user=User.objects.get(id=1))
-
-    def setUp(self):
-        self.test_legaldoc = LegalDoc.objects.get(id=1)
-
-        # use mocks instead of file system
-        self.mock_file = mock.MagicMock(spec=File)
-        self.mock_file.name = "test.pdf"
+        cls.test_legaldoc = LegalDoc.objects.get(id=1)
+        cls.mock_file = mock.MagicMock(spec=File)
+        cls.mock_file.name = "test.pdf"
 
     def test_up_date_field(self):
         self.assertEqual(self.test_legaldoc.up_date, date.today())
 
     def test_doc_field(self):
+
         # TODO: Add to doc field when test_legaldoc created 
         # (this creates different mock file names which I am yet to resolve).
         # If resolved, the line below will be redundant.
@@ -48,10 +45,16 @@ class LegalDocListViewTest(TestCase):
         User.objects.create_user(username="johnsmith", password="password")
         mock_file_pdf = mock.MagicMock(spec=File)
         mock_file_pdf.name = "test.pdf"
+
+        # avoid TypeError on f.write
         mock_file_pdf.read.return_value = "fakecontents"
+
         mock_file_jpg = mock.MagicMock(spec=File)
         mock_file_jpg.name = "test.jpg"
+
+        # avoid TypeError on f.write
         mock_file_jpg.read.return_value = "fakecontents"
+
         LegalDoc.objects.create(doc=mock_file_pdf, user=User.objects.get(id=1))
         for i in range(9):
             LegalDoc.objects.create(doc=mock_file_jpg, user=User.objects.get(id=1))
@@ -64,15 +67,15 @@ class LegalDocListViewTest(TestCase):
         response = self.client.get(reverse("index"))
         self.assertRedirects(response, "/?next=/documents/")
 
-    def test_view_url_exists_at_desired_location(self):
+    def test_url_exists_at_desired_location(self):
         response = self.client.get("/documents/")
         self.assertEqual(response.status_code, 200)
 
-    def test_view_url_accessible_by_name(self):
+    def test_url_accessible_by_name(self):
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
 
-    def test_view_uses_correct_template(self):
+    def test_uses_correct_template(self):
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "documents/legaldoc_list.html")
@@ -86,24 +89,37 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual(len(response.context["legaldoc_list"]), 8)
 
     def test_lists_all_legaldocs(self):
-        # Get second page and confirm it has (exactly) 2 remaining objects
+        # Confirm second page has two remaining objects
         response = self.client.get(reverse("index") + "?page=2")
         self.assertEqual(response.status_code, 200)
         self.assertTrue("is_paginated" in response.context)
         self.assertTrue(response.context["is_paginated"] == True)
         self.assertEqual(len(response.context["legaldoc_list"]), 2)
 
+    # some of these tests may be redundant
     def test_context(self):
+        # page 1
         response1 = self.client.get(reverse("index"))
         self.assertEqual(response1.status_code, 200)
+
+        self.assertContains(response1,"doc")
+        self.assertContains(response1,"user")
+
         test_legaldoc1 = response1.context["legaldoc_list"][0]
-        test_legaldoc2 = response1.context["legaldoc_list"][1]
         self.assertEqual(date.today(), test_legaldoc1.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc1.user))
         self.assertEqual("test.pdf", test_legaldoc1.doc.name)
+
+        test_legaldoc2 = response1.context["legaldoc_list"][1]
         self.assertEqual("test.jpg", test_legaldoc2.doc.name)
+
+        # page 2
         response2 = self.client.get(reverse("index") + "?page=2")
         self.assertEqual(response2.status_code, 200)
+
+        self.assertContains(response2,"doc")
+        self.assertContains(response2,"user")
+
         test_legaldoc = response2.context["legaldoc_list"][0]
         self.assertEqual("johnsmith", str(test_legaldoc.user))
         self.assertEqual(date.today(), test_legaldoc.up_date)
@@ -122,16 +138,16 @@ class UploadViewTest(TestCase):
         response = self.client.get(reverse("upload"))
         self.assertRedirects(response, "/?next=/documents/upload/")
 
-    def test_view_url_exists_at_desired_location(self):
+    def test_url_exists_at_desired_location(self):
         response = self.client.get("/documents/upload/")
         self.assertEqual(str(response.context["user"]), "johnsmith")
         self.assertEqual(response.status_code, 200)
 
-    def test_view_url_accessible_by_name(self):
+    def test_url_accessible_by_name(self):
         response = self.client.get(reverse("upload"))
         self.assertEqual(response.status_code, 200)
 
-    def test_view_uses_correct_template(self):
+    def test_uses_correct_template(self):
         response = self.client.get(reverse("upload"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "documents/user_upload.html")
@@ -155,8 +171,10 @@ class UploadViewTest(TestCase):
 
         response = self.client.post(reverse("upload"), data=form_entry)
         self.assertEqual(response.status_code, 200)
-        test_legaldoc = LegalDoc.objects.get(id=1)
         self.assertEqual(LegalDoc.objects.count(), 1)
-        self.assertEqual(mock_file.name, test_legaldoc.doc.name)
+
+        test_legaldoc = LegalDoc.objects.get(id=1)
+        self.assertEqual("test.img", test_legaldoc.doc.name)
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
+    
