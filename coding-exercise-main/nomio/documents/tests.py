@@ -23,14 +23,14 @@ class LegalDocModelTest(TestCase):
 
     def test_doc_field(self):
 
-        # TODO: Add to doc field when test_legaldoc created 
+        # TODO: Add to doc field when test_legaldoc created
         # (this creates different mock file names which I am yet to resolve).
         # If resolved, the line below will be redundant.
         self.test_legaldoc.doc = self.mock_file
         self.assertEqual(self.test_legaldoc.doc.name, self.mock_file.name)
         self.assertEqual(self.test_legaldoc.doc.url, "/media/test.pdf")
 
-    def test_user_field(self): 
+    def test_user_field(self):
         self.assertEqual(str(self.test_legaldoc.user), "johnsmith")
 
     def test_obj_name(self):  # test __str__
@@ -102,7 +102,7 @@ class LegalDocListViewTest(TestCase):
         response1 = self.client.get(reverse("index"))
         self.assertEqual(response1.status_code, 200)
 
-        self.assertContains(response1,"doc")
+        self.assertContains(response1, "doc")
 
         test_legaldoc1 = response1.context["legaldoc_list"][0]
         self.assertEqual(date.today(), test_legaldoc1.up_date)
@@ -116,7 +116,7 @@ class LegalDocListViewTest(TestCase):
         response2 = self.client.get(reverse("index") + "?page=2")
         self.assertEqual(response2.status_code, 200)
 
-        self.assertContains(response2,"doc")
+        self.assertContains(response2, "doc")
 
         test_legaldoc = response2.context["legaldoc_list"][0]
         self.assertEqual("johnsmith", str(test_legaldoc.user))
@@ -190,6 +190,7 @@ class UploadViewTest(TestCase):
         # check nothing added to database
         self.assertEqual(LegalDoc.objects.count(), 0)
 
+
 class LegalDocDeleteViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -217,28 +218,32 @@ class LegalDocDeleteViewTest(TestCase):
 
     def test_redirect_if_not_logged_in(self):
         self.client.logout()
-        response = self.client.get(reverse("delete", kwargs={"pk": self.test_legaldoc.id}))
+        response = self.client.get(
+            reverse("delete", kwargs={"pk": self.test_legaldoc.id})
+        )
         self.assertRedirects(response, "/?next=/documents/delete/1")
 
     def test_url_accessible_by_name(self):
-        response = self.client.post(reverse("delete", kwargs={"pk": self.test_legaldoc.id}))
+        response = self.client.post(
+            reverse("delete", kwargs={"pk": self.test_legaldoc.id})
+        )
         self.assertEqual(response.status_code, 302)
 
     def test_uses_correct_template(self):
-        response = self.client.get(reverse("delete", kwargs={"pk": self.test_legaldoc.id}))
+        response = self.client.get(
+            reverse("delete", kwargs={"pk": self.test_legaldoc.id})
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "documents/legaldoc_confirm_delete.html")
         self.assertTemplateUsed(response, "base.html")
 
     def test_file_deleted(self):
         self.assertEqual(LegalDoc.objects.count(), 4)
-        response = self.client.post(reverse("delete", kwargs={"pk": self.test_legaldoc.id}))
+        response = self.client.post(
+            reverse("delete", kwargs={"pk": self.test_legaldoc.id})
+        )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(LegalDoc.objects.count(), 3)
 
         # test instance with id=1 is deleted
         self.assertFalse(LegalDoc.objects.filter(id=1))
-
-
-    
-    

@@ -5,8 +5,9 @@ from django.db import models
 
 class LegalDoc(models.Model):
     """Create a LegalDoc model."""
-    allowed_extensions = ["doc", "docx","img","jpg","pdf","png"]
-    doc = models.FileField(validators=[FileExtensionValidator(allowed_extensions) ])
+
+    allowed_extensions = ["doc", "docx", "img", "jpg", "pdf", "png"]
+    doc = models.FileField(validators=[FileExtensionValidator(allowed_extensions)])
     up_date = models.DateField(auto_now_add=True)
 
     # use RESTRICT to avoid unintended data loss

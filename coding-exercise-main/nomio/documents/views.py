@@ -10,8 +10,8 @@ from .models import LegalDoc
 
 
 class LegalDocListView(LoginRequiredMixin, generic.ListView):
-    """Render a list of LegalDoc objects.
-    """
+    """Render a list of LegalDoc objects."""
+
     model = LegalDoc
     paginate_by = 8
 
@@ -23,10 +23,13 @@ class LegalDocListView(LoginRequiredMixin, generic.ListView):
         """
         return LegalDoc.objects.filter(user=self.request.user)
 
+
 class LegalDocDeleteView(LoginRequiredMixin, DeleteView):
     """Delete selected instance from database."""
+
     model = LegalDoc
-    success_url ="/documents"
+    success_url = "/documents"
+
 
 # conside changing to generic CreateView
 @login_required
@@ -50,8 +53,8 @@ def upload(request):
             return render(request, "documents/confirm_upload.html")
         else:
             context = {
-            "form": form,
-        }
+                "form": form,
+            }
             return render(request, "documents/user_upload.html", context)
     else:
         context = {
