@@ -29,6 +29,7 @@
                     <th>Date Uploaded</th>
                     <th></th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -63,6 +64,15 @@
                         <span class="text-muted">No File</span>
                         {% endif %}
                     </td>
+
+                    <td>
+                        {% if file.doc %}
+                        <a href="{% url 'delete' pk=file.pk %}">Delete File</a>
+                        {% else %}
+                        <span class="text-muted">No File</span>
+                        {% endif %}
+                    </td>
+
                 </tr>
 
                 {% endfor %}

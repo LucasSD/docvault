@@ -190,5 +190,55 @@ class UploadViewTest(TestCase):
         # check nothing added to database
         self.assertEqual(LegalDoc.objects.count(), 0)
 
+class LegalDocDeleteViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User.objects.create_user(username="johnsmith", password="password")
+        mock_file_png = mock.MagicMock(spec=File)
+        mock_file_png.name = "test.png"
 
+        # avoid TypeError on f.write
+        mock_file_png.read.return_value = "fakecontents"
+
+        mock_file_txt = mock.MagicMock(spec=File)
+        mock_file_txt.name = "test.txt"
+
+        # avoid TypeError on f.write
+        mock_file_txt.read.return_value = "fakecontents"
+
+        LegalDoc.objects.create(doc=mock_file_png, user=User.objects.get(id=1))
+        for i in range(3):
+            LegalDoc.objects.create(doc=mock_file_txt, user=User.objects.get(id=1))
+
+        cls.test_legaldoc = LegalDoc.objects.get(id=1)
+
+    def setUp(self):
+        self.client.force_login(User.objects.get(id=1))
+
+    def test_redirect_if_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(reverse("delete", kwargs={"pk": self.test_legaldoc.id}))
+        self.assertRedirects(response, "/?next=/documents/delete/1")
+
+    def test_url_accessible_by_name(self):
+        response = self.client.post(reverse("delete", kwargs={"pk": self.test_legaldoc.id}))
+        self.assertEqual(response.status_code, 302)
+
+    def test_uses_correct_template(self):
+        response = self.client.get(reverse("delete", kwargs={"pk": self.test_legaldoc.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "documents/legaldoc_confirm_delete.html")
+        self.assertTemplateUsed(response, "base.html")
+
+    def test_file_deleted(self):
+        self.assertEqual(LegalDoc.objects.count(), 4)
+        response = self.client.post(reverse("delete", kwargs={"pk": self.test_legaldoc.id}))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(LegalDoc.objects.count(), 3)
+
+        # test instance with id=1 is deleted
+        self.assertFalse(LegalDoc.objects.filter(id=1))
+
+
+    
     

@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views import generic
 from django.views.decorators.csrf import csrf_protect
+from django.views.generic.edit import DeleteView
 
 from .forms import UserUploadForm
 from .models import LegalDoc
@@ -22,7 +23,12 @@ class LegalDocListView(LoginRequiredMixin, generic.ListView):
         """
         return LegalDoc.objects.filter(user=self.request.user)
 
-@csrf_protect
+class LegalDocDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete selected instance from database."""
+    model = LegalDoc
+    success_url ="/documents"
+
+# conside changing to generic CreateView
 @login_required
 def upload(request):
     """Render page and store LegalDoc model on POST.
