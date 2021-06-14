@@ -1,2 +1,4 @@
 from .settings import *
-DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'
+
+# avoid accessing file system
+DEFAULT_FILE_STORAGE = "inmemorystorage.InMemoryStorage"

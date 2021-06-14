@@ -1,38 +1,63 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.views import generic
-from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_protect
+from django.views.generic.edit import DeleteView
 
-
-from .models import LegalDoc
 from .forms import UserUploadForm
-'''
-@login_required
-def index(request: HttpRequest) -> HttpResponse:
-    return render(request, "documents/index.html")'''
+from .models import LegalDoc
+
 
 class LegalDocListView(LoginRequiredMixin, generic.ListView):
+    """Render a list of LegalDoc objects."""
+
     model = LegalDoc
     paginate_by = 8
 
     def get_queryset(self):
-        # change this to filter for logged in User only?
-        return LegalDoc.objects.filter(user=self.request.user).order_by('-up_date')
+        """Override to return LegalDoc objects uploaded by current user.
 
+        Returns:
+            QuerySet: A list of LegalDoc objects.
+        """
+        return LegalDoc.objects.filter(user=self.request.user)
+
+
+class LegalDocDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete selected instance from database."""
+
+    model = LegalDoc
+    success_url = "/documents"
+
+
+# conside changing to generic CreateView
 @login_required
 def upload(request):
+    """Render page and store LegalDoc model on POST.
+
+    Args:
+        request (HttpRequest): Basic HTTP request.
+
+    Returns:
+        HttpResponse: Includes blank form in context on GET.
+    """
     form = UserUploadForm()
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserUploadForm(request.POST, request.FILES)
         if form.is_valid():
             upload_conf = form.save(commit=False)
-            upload_conf.doc = request.FILES['doc']
+            upload_conf.doc = request.FILES["doc"]
             upload_conf.user = request.user
             upload_conf.save()
-            return render(request, 'documents/confirm_upload.html', {'upload_conf': upload_conf})
-    else: 
-        context = {"form": form,}
-        return render(request, 'documents/user_upload.html', context)
-
+            return render(request, "documents/confirm_upload.html")
+        else:
+            context = {
+                "form": form,
+            }
+            return render(request, "documents/user_upload.html", context)
+    else:
+        context = {
+            "form": form,
+        }
+        return render(request, "documents/user_upload.html", context)

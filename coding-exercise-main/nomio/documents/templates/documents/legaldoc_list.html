@@ -2,86 +2,85 @@
 {% load static %}
 
 {% block body %}
-<h1>Upload, View and Download Your Nomio Documents</h1>
+
 <body>
-            </ol>
-                    Your Nomio Documents
+    <h1>Your Nomio Documents</h1>
+    <p class="breadcrumb">
+    <p class="breadcrumb-item">
+        <a href="{% static 'landing/home.css' %}"></a>
 
-            <!-- Breadcrumbs-->
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="{% static 'landing/home.css' %}"></a>
+        <a class="btn btn-sm btn-success" href="{% url 'upload' %}" style="border: none;
+                    border-radius: 3px;
+                    background-color: var(--black);
+                    padding: 0.5rem 1rem;
+                  
+                    color: var(--white);
+                  
+                    cursor: pointer;">Upload</a>
 
-                    <a  class="btn btn-sm btn-success" href="{% url 'upload' %}" style="padding: 8px; float: right; background-color: black; color: white;">Upload</a>
-                </li>
-            </ol>
-             {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-            <div class="card mb-3">
-                <div class="card-header text-primary">
-               <i class="fas fa-truck text-secondary"></i>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Cover</th>
-                                <th>Date Uploaded</th>
-                                <th>Owner</th>
-                                <th>View</th>
-                                <th>Download</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="15">
 
-                            	<!-- if and for loop -->
-                            	{% if legaldoc_list %}
-                            	  {% for file in legaldoc_list %}
+            <!--if LegalDocListView returns context variable -->
+            {% if legaldoc_list %}
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Date Uploaded</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- iterate through LegalDocListView variable -->
+                {% for file in legaldoc_list %}
 
-                                <tr>
-                                    <td>{{ forloop.counter }}</td>
+                <tr>
+                    <td>
 
-                                    <td>
-                                    {% if file.cover %}
-                                    <img src="{{ file.cover.url }}" alt="{{ file.name }}" style="width:100px; height: 100px">
-                                    {% else %}
-                                    <span class="text-muted">No cover</span>
-                                    {% endif %}
-                                    </td>
+                        {{ file.doc.name }}
 
-                                   <!-- file upload date and user -->
-                                    <td>{{ file.up_date }}</td>
-                                    <td>{{ file.user }}</td>
-                                    <td>
+                    </td>
 
-                                    {% if file.doc %}
-                                      <a href="{{ file.doc.url }}" class="btn btn-outline-primary" target="_blank">
-                                    View File</a>
-                                    {% else %}
-                                    <span class="text-muted">No File</span>
-                                    {% endif %}
-                                    </td>
+                    <!-- file upload date -->
+                    <td>{{ file.up_date }}</td>
 
-                                    <td>
-                                    {% if file.doc %}
-                                      <a href="{{ file.doc.url }}" download class="btn btn-outline-success">
-                                    Download File</a>
-                                    {% else %}
-                                    <span class="text-muted">No File</span>
-                                    {% endif %}
-                                    </td> 
-                                </tr>
+                    <td>
 
-                                <!-- end for and if -->
-                                {% endfor %}
-                                {% endif %}
-                            </tbody>
-                        </table>
+                        {% if file.doc %}
+                        <a href="{{ file.doc.url }}" class="btn btn-outline-primary" target="_blank">
+                            View File</a>
+                        {% else %}
+                        <span class="text-muted">No File</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if file.doc %}
+                        <a href="{{ file.doc.url }}" download class="btn btn-outline-success">
+                            Download File</a>
+                        {% else %}
+                        <span class="text-muted">No File</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if file.doc %}
+                        <a href="{% url 'delete' pk=file.pk %}">Delete File</a>
+                        {% else %}
+                        <span class="text-muted">No File</span>
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+            {% else %}
+                <p> You have not uploaded any files yet</p>
+            {% endif %}
+            </tbody>
+        </table>
 
 {% endblock %}
 

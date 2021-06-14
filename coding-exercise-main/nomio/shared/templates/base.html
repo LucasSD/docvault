@@ -4,43 +4,49 @@
 
 <head>
   {% block head %}
-    <title>Nomio</title>
-    <link rel="stylesheet" href="{% static 'nomio.css' %}" />
+  <title>Nomio</title>
+  <link rel="stylesheet" href="{% static 'nomio.css' %}" />
   {% endblock %}
 </head>
 
-{% block sidebar %}
-<ul class="sidebar-nav">
-  <li><a href="{% url 'index' %}">My Documents</a></li>
-  <li><a href="{% url 'upload' %}">Upload</a></li>
-</ul>
-{% if user.is_authenticated %}
-<li>Welcome {{ user.get_username }}</li>
-<li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
-{% endif %} 
-</ul>
-{% endblock %}
-
 <body>
+
+  {% block menu %}
+  <div class="sidenav">
+    <a href="{% url 'index' %}">My Documents</a>
+    <br>
+    <a href="{% url 'upload' %}">Upload</a>
+    {% if user.is_authenticated %}
+    <br>
+    <a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+    <p>Logged In: {{ user.get_username }}</p>
+
+    {% endif %}
+  </div>
+
+  {% endblock %}
+
   {% block body %}{% endblock %}
-
-
-
+  </br>
   {% block pagination %}
-  {% if is_paginated %}
-      <div class="pagination">
-          <span class="page-links">
-              {% if page_obj.has_previous %}
-                  <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
-              {% endif %}
-              <span class="page-current">
-                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-              </span>
-              {% if page_obj.has_next %}
-                  <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
-              {% endif %}
-          </span>
-      </div>
-  {% endif %}
-{% endblock %}</div>
+    {% if is_paginated %}
+  <div class="pagination">
+    <span class="page-links">
+      {% if page_obj.has_previous %}
+      <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+      {% endif %}
+      <span class="page-current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+      </span>
+      {% if page_obj.has_next %}
+      <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+      {% endif %}
+    </span>
+  </div>
+    {% endif %}
+  {% endblock %}</div>
+  </div>
+  </div>
 </body>
+
+</html>
