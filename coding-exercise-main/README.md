@@ -12,10 +12,9 @@ I have a separate test_settings file.
 
 I have a setup.cfg file to configure Coverage (and a cvrg.bat file to run it more easily from the terminal). 
 
-I have not tested templates directly, but I have tested the context data sent to them. My understanding is that this is considered sufficient by some, but it would be interesting to discuss this point with you. 
+I have not tested templates directly, but I have tested the context data sent to them. My understanding is that this is considered sufficient by some, but it would be interesting to discuss this point with you. I wanted to run some integrated tests with Selenium, but ran out of time. I believe some of my tests are somewhat integrated anyway. 
 
 I decided not to include type annotation, but would be interested in your guidance on this (I note that you used it in your initial view included in the exercise). 
-
 
 ## Getting Started
 
