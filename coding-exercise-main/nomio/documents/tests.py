@@ -175,4 +175,20 @@ class UploadViewTest(TestCase):
         self.assertEqual("test.img", test_legaldoc.doc.name)
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
+
+    def test_form_post_file_invalid(self):
+        mock_file = mock.MagicMock(spec=File)
+        mock_file.name = "test.html"
+
+        form_entry = {
+            "doc": mock_file,
+        }
+
+        response = self.client.post(reverse("upload"), data=form_entry)
+        self.assertEqual(response.status_code, 200)
+
+        # check nothing added to database
+        self.assertEqual(LegalDoc.objects.count(), 0)
+
+
     

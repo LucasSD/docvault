@@ -6,6 +6,8 @@ Some points to note:
 
 I seriously considered using Notion to journal my progress, since it's what you use at Nomio. I signed up and it certainly looks helpful. 
 
+I have not yet implemented file validation based on MIME. I understand this will be essential before deployment, togther with other security improvements.
+
 I have a separate test_settings file. 
 
 I have a setup.cfg file to configure Coverage (and a cvrg.bat file to run it more easily from the terminal). 

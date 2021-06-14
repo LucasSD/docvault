@@ -42,6 +42,11 @@ def upload(request):
             upload_conf.user = request.user
             upload_conf.save()
             return render(request, "documents/confirm_upload.html")
+        else:
+            context = {
+            "form": form,
+        }
+            return render(request, "documents/user_upload.html", context)
     else:
         context = {
             "form": form,
