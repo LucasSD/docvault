@@ -6,7 +6,7 @@ Some points to note:
 
 I seriously considered using Notion to journal my progress, since it's what you use at Nomio. I signed up and it certainly looks helpful. 
 
-I have not yet implemented file validation based on MIME. I understand this will be essential before deployment, togther with other security improvements.
+I have not yet implemented file validation based on MIME. I understand this will be essential before deployment, together with other security improvements.
 
 I have a separate test_settings file. 
 
@@ -15,6 +15,25 @@ I have a setup.cfg file to configure Coverage (and a cvrg.bat file to run it mor
 I have not tested templates directly, but I have tested the context data sent to them. My understanding is that this is considered sufficient by some, but it would be interesting to discuss this point with you. I wanted to run some integrated tests with Selenium, but ran out of time. I believe some of my tests are somewhat integrated anyway. 
 
 I decided not to include type annotation, but would be interested in your guidance on this (I note that you used it in your initial view included in the exercise). 
+
+## ToDo (from highest to lowest priority, approximately):
+
+Security - validate file uploads using MIME.
+Integrated testing with Selenium (all browsers/screen sizes)
+Consider cookie support
+Include all Django auth URLs for user creation, password reset and so on
+Add CI to my version control
+Enable multiple file uploads in one click
+Add category field for user to categorise uploads and filter
+Order files by time uploaded as well (change fields if needed).
+Check for duplicate file names before uploading (which adds a random sequence to filename)
+Improved login/logout functionality - give user a message that they are logged out?
+Consider changing settings.LOGIN_URL to the appropriate view name
+Consider changing route for LogoutView
+Add file thumbnails?
+Improve visuals - CSS for all buttons and so on
+Consider creating a test runner
+Consider using 'with.settings' to change storage settings instead of a test_settings.py file. 
 
 ## Getting Started
 
