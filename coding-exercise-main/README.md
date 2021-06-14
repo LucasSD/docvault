@@ -4,6 +4,8 @@ I have written my own _Getting Started_ section below, to run my solution.
 
 Some points to note:
 
+I seriously considered using Notion to journal my progress, since it's what you use at Nomio. I signed up and it certainly looks helpful. 
+
 I have a separate test_settings file. 
 
 I have a setup.cfg file to configure Coverage (and a cvrg.bat file to run it more easily from the terminal). 
