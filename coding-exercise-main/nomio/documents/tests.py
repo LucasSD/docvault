@@ -103,7 +103,6 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual(response1.status_code, 200)
 
         self.assertContains(response1,"doc")
-        self.assertContains(response1,"user")
 
         test_legaldoc1 = response1.context["legaldoc_list"][0]
         self.assertEqual(date.today(), test_legaldoc1.up_date)
@@ -118,7 +117,6 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual(response2.status_code, 200)
 
         self.assertContains(response2,"doc")
-        self.assertContains(response2,"user")
 
         test_legaldoc = response2.context["legaldoc_list"][0]
         self.assertEqual("johnsmith", str(test_legaldoc.user))

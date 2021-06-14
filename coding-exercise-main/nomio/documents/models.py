@@ -3,6 +3,8 @@ from django.db import models
 
 
 class LegalDoc(models.Model):
+    """Create a LegalDoc model."""
+
     doc = models.FileField()
     up_date = models.DateField(auto_now_add=True)
 
@@ -10,8 +12,12 @@ class LegalDoc(models.Model):
     user = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
 
     class Meta:
-        # this orders the database and avoids pagination ordering warnings
+        # avoids pagination ordering warnings
         ordering = ["-up_date"]
 
     def __str__(self):
+        """
+        Returns:
+            str: Filename, name of user and upload date.
+        """
         return " ".join([self.doc.name, str(self.user), str(self.up_date)])

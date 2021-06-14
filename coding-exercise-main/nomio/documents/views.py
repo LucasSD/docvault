@@ -8,15 +8,30 @@ from .models import LegalDoc
 
 
 class LegalDocListView(LoginRequiredMixin, generic.ListView):
+    """Render a list of LegalDoc objects.
+    """
     model = LegalDoc
     paginate_by = 8
 
     def get_queryset(self):
+        """Override to return LegalDoc objects uploaded by current user.
+
+        Returns:
+            QuerySet: A list of LegalDoc objects.
+        """
         return LegalDoc.objects.filter(user=self.request.user)
 
 
 @login_required
 def upload(request):
+    """Render page and store LegalDoc model on POST.
+
+    Args:
+        request (HttpRequest): Basic HTTP request.
+
+    Returns:
+        HttpResponse: Includes blank form in context on GET.
+    """
     form = UserUploadForm()
     if request.method == "POST":
         form = UserUploadForm(request.POST, request.FILES)

@@ -1,5 +1,5 @@
 domain-driven naming, some tests redundant?, have not tested templates, I have favoured testing over extra features. 
-No type annotation 
+No type annotation. setup.cfg. cvrg.bat
 
 ## Getting Started
 
