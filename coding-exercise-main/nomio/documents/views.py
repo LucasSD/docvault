@@ -46,16 +46,8 @@ def upload(request):
     if request.method == "POST":
         form = UserUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            #files = request.FILES.getlist('doc')
-            #files = request.FILES['doc']
-            #print(request.FILES)
-            for f in request.FILES.getlist("doc"): 
-                print(f)
+            for f in request.FILES.getlist("doc"):
                 LegalDoc.objects.create(doc=f, user=request.user)
-                #upload_conf = form.save(commit=False)
-                #upload_conf.doc = f
-                #upload_conf.user = request.user
-                #upload_conf.save()
             return render(request, "documents/confirm_upload.html")
         else:
             context = {

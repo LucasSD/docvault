@@ -22,6 +22,7 @@ Security - validate file uploads using MIME.
 Don't save filename in Nomio database.
 Use different database?
 Integrated testing with Selenium (all browsers/screen sizes)
+Test templates
 Consider cookie support
 Include all Django auth URLs for user creation, password reset and so on
 Add CI to my version control
@@ -32,7 +33,7 @@ Improved login/logout functionality - give user a message that they are logged o
 Consider changing settings.LOGIN_URL to the appropriate view name
 Consider changing route for LogoutView
 Add file thumbnails?
-Improve visuals - CSS for all buttons and so on
+Improve visuals - CSS for all buttons and so on. Improve warning for incorrect file type. 
 Consider creating a test runner
 Consider using 'with.settings' to change storage settings instead of a test_settings.py file. 
 
