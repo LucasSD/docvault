@@ -11,3 +11,8 @@ class UserUploadForm(forms.ModelForm):
         fields = [
             "doc",
         ]
+
+        widgets = {
+                'doc': forms.ClearableFileInput(attrs={'multiple': True})
+          }
+

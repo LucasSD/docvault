@@ -4,7 +4,7 @@ I have written my own _Getting Started_ section below, to run my solution.
 
 Some points to note:
 
-I seriously considered using Notion to journal my progress, since it's what you use at Nomio. I signed up and it certainly looks helpful. 
+I seriously considered using Notion to journal my progress, since it's what you use at Nomio. I signed up and it certainly looks helpful. I used a virtual environment and version control throughout. 
 
 I have not yet implemented file validation based on MIME. I understand this will be essential before deployment, together with other security improvements.
 
@@ -19,11 +19,12 @@ I decided not to include type annotation, but would be interested in your guidan
 ## ToDo (from highest to lowest priority, approximately):
 
 Security - validate file uploads using MIME.
+Don't save filename in Nomio database.
+Use different database?
 Integrated testing with Selenium (all browsers/screen sizes)
 Consider cookie support
 Include all Django auth URLs for user creation, password reset and so on
 Add CI to my version control
-Enable multiple file uploads in one click
 Add category field for user to categorise uploads and filter
 Order files by time uploaded as well (change fields if needed).
 Check for duplicate file names before uploading (which adds a random sequence to filename)
