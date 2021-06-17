@@ -5,18 +5,8 @@
 
 <body>
     <h1>Your Nomio Documents</h1>
-    <p class="breadcrumb">
-    <p class="breadcrumb-item">
-        <a href="{% static 'landing/home.css' %}"></a>
-
-        <a class="btn btn-sm btn-success" href="{% url 'upload' %}" style="border: none;
-                    border-radius: 3px;
-                    background-color: var(--black);
-                    padding: 0.5rem 1rem;
-                  
-                    color: var(--white);
-                  
-                    cursor: pointer;">Upload</a>
+    <br>
+        <a class="btn btn-sm btn-success" href="{% url 'upload' %}" >Upload</a>
 
     <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="15">

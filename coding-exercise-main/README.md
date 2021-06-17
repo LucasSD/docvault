@@ -18,7 +18,7 @@ I decided not to include type annotation, but would be interested in your guidan
 
 ## ToDo (from highest to lowest priority, approximately):
 
-Security - validate file uploads using MIME.
+Security - validate file uploads using MIME. Or could opening each file (read-only) and checking the bytes to check for file type. 
 Don't save filename in Nomio database.
 Use different database?
 Integrated testing with Selenium (all browsers/screen sizes)
