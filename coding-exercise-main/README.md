@@ -20,6 +20,7 @@ I decided not to include type annotation, but would be interested in your guidan
 
 Security - validate file uploads using MIME. Or could opening each file (read-only) and checking the bytes to check for file type. 
 Don't save filename in Nomio database.
+Should logout be a button, not a link?
 Use different database?
 Integrated testing with Selenium (all browsers/screen sizes)
 Test templates
@@ -36,6 +37,7 @@ Add file thumbnails?
 Improve visuals - CSS for all buttons and so on. Improve warning for incorrect file type. 
 Consider creating a test runner
 Consider using 'with.settings' to change storage settings instead of a test_settings.py file. 
+Set CSRF failure view in settings.py
 
 ## Getting Started
 

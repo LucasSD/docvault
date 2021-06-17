@@ -22,7 +22,7 @@ button, .btn {
   cursor: pointer;
 }
 
-div.sidenav a:visited, div span a:visited { 
+div.nav a:visited, div span a:visited { 
   text-decoration: none; 
   color:blue; 
  }
