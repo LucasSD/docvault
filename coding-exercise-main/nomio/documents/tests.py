@@ -197,7 +197,7 @@ class UploadViewTest(TestCase):
         mock_file2 = mock.MagicMock(spec=File)
         mock_file2.name = "test2.img"
 
-        form_entry = {"doc": {mock_file1, mock_file2}}
+        form_entry = {"doc": (mock_file1, mock_file2)}
 
         self.assertEqual(LegalDoc.objects.count(), 0)
         response = self.client.post(reverse("upload"), data=form_entry)
