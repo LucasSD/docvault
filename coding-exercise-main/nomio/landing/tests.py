@@ -33,3 +33,4 @@ class LogoutViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "landing/home.html")
         self.assertTemplateUsed(response, "base.html")
+

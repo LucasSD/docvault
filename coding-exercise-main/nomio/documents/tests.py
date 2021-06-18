@@ -12,8 +12,8 @@ from .models import LegalDoc
 class LegalDocModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        User.objects.create_user(username="johnsmith", password="password")
-        LegalDoc.objects.create(user=User.objects.get(id=1))
+        test_user = User.objects.create_user(username="johnsmith", password="password")
+        LegalDoc.objects.create(user=test_user)
         cls.test_legaldoc = LegalDoc.objects.get(id=1)
         cls.mock_file = mock.MagicMock(spec=File)
         cls.mock_file.name = "test.pdf"
