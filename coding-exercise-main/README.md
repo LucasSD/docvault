@@ -38,6 +38,7 @@ Improve visuals - CSS for all buttons and so on. Improve warning for incorrect f
 Consider creating a test runner
 Consider using 'with.settings' to change storage settings instead of a test_settings.py file. 
 Set CSRF failure view in settings.py
+Put some built-in error handling views in the url.py file in root directory, to improve UX. 
 
 ## Getting Started
 

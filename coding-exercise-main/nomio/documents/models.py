@@ -14,7 +14,7 @@ class LegalDoc(models.Model):
     user = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
 
     class Meta:
-        # avoids pagination ordering warnings
+        # also avoids pagination ordering warnings
         ordering = ["-up_date"]
 
     def __str__(self):

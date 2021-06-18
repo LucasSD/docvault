@@ -58,7 +58,7 @@
 
                     <td>
                         {% if file.doc %}
-                        <a href="{% url 'delete' pk=file.pk %}" class="btn" >Delete File</a>
+                        <a href="{% url 'delete' file.pk %}" class="btn" >Delete File</a>
                         {% else %}
                         <span class="text-muted">No File</span>
                         {% endif %}
