@@ -27,7 +27,7 @@ class LegalDocModelTest(TestCase):
         # (this creates different mock file names which I am yet to resolve).
         # If resolved, the line below will be redundant.
         self.test_legaldoc.doc = self.mock_file
-        self.assertEqual(self.test_legaldoc.doc.name, self.mock_file.name)
+        self.assertEqual(self.test_legaldoc.doc.name, "test.pdf")
         self.assertEqual(self.test_legaldoc.doc.url, "/media/test.pdf")
 
     def test_user_field(self):
@@ -42,7 +42,7 @@ class LegalDocModelTest(TestCase):
 class LegalDocListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        User.objects.create_user(username="johnsmith", password="password")
+        test_user = User.objects.create_user(username="johnsmith", password="password")
         mock_file_pdf = mock.MagicMock(spec=File)
         mock_file_pdf.name = "test.pdf"
 
@@ -55,9 +55,10 @@ class LegalDocListViewTest(TestCase):
         # avoid TypeError on f.write
         mock_file_jpg.read.return_value = "fakecontents"
 
-        LegalDoc.objects.create(doc=mock_file_pdf, user=User.objects.get(id=1))
+        # add one PDF and nine JPEG files to database
+        LegalDoc.objects.create(doc=mock_file_pdf, user=test_user)
         for i in range(9):
-            LegalDoc.objects.create(doc=mock_file_jpg, user=User.objects.get(id=1))
+            LegalDoc.objects.create(doc=mock_file_jpg, user=test_user)
 
     def setUp(self):
         self.client.force_login(User.objects.get(id=1))
@@ -101,7 +102,6 @@ class LegalDocListViewTest(TestCase):
         # page 1
         response1 = self.client.get(reverse("index"))
         self.assertEqual(response1.status_code, 200)
-
         self.assertContains(response1, "doc")
 
         test_legaldoc1 = response1.context["legaldoc_list"][0]
@@ -115,12 +115,13 @@ class LegalDocListViewTest(TestCase):
         # page 2
         response2 = self.client.get(reverse("index") + "?page=2")
         self.assertEqual(response2.status_code, 200)
-
         self.assertContains(response2, "doc")
 
         test_legaldoc = response2.context["legaldoc_list"][0]
-        self.assertEqual("johnsmith", str(test_legaldoc.user))
         self.assertEqual(date.today(), test_legaldoc.up_date)
+        self.assertEqual("johnsmith", str(test_legaldoc.user))
+        self.assertEqual("test.jpg", test_legaldoc2.doc.name)
+        
 
 
 class UploadViewTest(TestCase):
@@ -167,14 +168,15 @@ class UploadViewTest(TestCase):
             "doc": mock_file,
         }
 
+        self.assertEqual(LegalDoc.objects.count(), 0)
         response = self.client.post(reverse("upload"), data=form_entry)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(LegalDoc.objects.count(), 1)
 
         test_legaldoc = LegalDoc.objects.get(id=1)
-        self.assertEqual("test.img", test_legaldoc.doc.name)
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
+        self.assertEqual("test.img", test_legaldoc.doc.name)
 
     def test_form_post_file_invalid(self):
         mock_file = mock.MagicMock(spec=File)
@@ -208,7 +210,7 @@ class UploadViewTest(TestCase):
 class LegalDocDeleteViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        User.objects.create_user(username="johnsmith", password="password")
+        test_user = User.objects.create_user(username="johnsmith", password="password")
         mock_file_png = mock.MagicMock(spec=File)
         mock_file_png.name = "test.png"
 
@@ -221,9 +223,10 @@ class LegalDocDeleteViewTest(TestCase):
         # avoid TypeError on f.write
         mock_file_txt.read.return_value = "fakecontents"
 
-        LegalDoc.objects.create(doc=mock_file_png, user=User.objects.get(id=1))
+        # add one PNG and 3 .txt files to database
+        LegalDoc.objects.create(doc=mock_file_png, user=test_user)
         for i in range(3):
-            LegalDoc.objects.create(doc=mock_file_txt, user=User.objects.get(id=1))
+            LegalDoc.objects.create(doc=mock_file_txt, user=test_user)
 
         cls.test_legaldoc = LegalDoc.objects.get(id=1)
 
@@ -232,7 +235,7 @@ class LegalDocDeleteViewTest(TestCase):
 
     def test_redirect_if_not_logged_in(self):
         self.client.logout()
-        response = self.client.get(
+        response = self.client.post(
             reverse("delete", kwargs={"pk": self.test_legaldoc.id})
         )
         self.assertRedirects(response, "/?next=/documents/delete/1")
@@ -241,6 +244,7 @@ class LegalDocDeleteViewTest(TestCase):
         response = self.client.post(
             reverse("delete", kwargs={"pk": self.test_legaldoc.id})
         )
+        #self.assertRedirects(response, 'documents/delete/1')
         self.assertEqual(response.status_code, 302)
 
     def test_uses_correct_template(self):
