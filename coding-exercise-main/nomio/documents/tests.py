@@ -6,7 +6,7 @@ from django.core.files import File
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import LegalDoc
+from .models import LegalDoc, Tag
 
 
 class LegalDocModelTest(TestCase):
@@ -18,9 +18,6 @@ class LegalDocModelTest(TestCase):
         cls.mock_file = mock.MagicMock(spec=File)
         cls.mock_file.name = "test.pdf"
 
-    def test_up_date_field(self):
-        self.assertEqual(self.test_legaldoc.up_date, date.today())
-
     def test_doc_field(self):
 
         # TODO: Add to doc field when test_legaldoc created
@@ -30,14 +27,43 @@ class LegalDocModelTest(TestCase):
         self.assertEqual(self.test_legaldoc.doc.name, "test.pdf")
         self.assertEqual(self.test_legaldoc.doc.url, "/media/test.pdf")
 
+    def test_up_date_field(self):
+        self.assertEqual(self.test_legaldoc.up_date, date.today())
+
     def test_user_field(self):
         self.assertEqual(str(self.test_legaldoc.user), "johnsmith")
+
+    def test_tag_field(self):
+        test_tag = Tag.objects.create(name="solar")
+        self.test_legaldoc.tag.add(test_tag)
+        self.test_legaldoc.save()
+
+        expected_tag = str(
+            self.test_legaldoc.tag.all()[0]
+        )  # queryset is a list of length one
+        self.assertEqual(expected_tag, "solar")
+
+    
 
     def test_obj_name(self):  # test __str__
         self.test_legaldoc.doc = self.mock_file
         expected_obj_name = f"{self.test_legaldoc.doc.name} {self.test_legaldoc.user} {self.test_legaldoc.up_date}"
         self.assertEqual(expected_obj_name, str(self.test_legaldoc))
 
+class TagModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.test_tag = Tag.objects.create(name = "solar")
+
+    def test_name_field(self):
+        self.assertEqual(self.test_tag.name, "solar")
+        max_length = self.test_tag._meta.get_field("name").max_length
+        self.assertEqual(max_length, 80)
+    
+    def test_obj_name(self):  # test __str__
+        expected_obj_name = f"{self.test_tag.name}"
+        self.assertEqual(expected_obj_name, "solar")
+        
 
 class LegalDocListViewTest(TestCase):
     @classmethod
