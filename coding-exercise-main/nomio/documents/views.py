@@ -28,7 +28,7 @@ class LegalDocDeleteView(LoginRequiredMixin, DeleteView):
     """Delete selected instance from database."""
 
     model = LegalDoc
-    success_url = "/documents"
+    success_url = "/documents/"
 
 
 # conside changing to generic CreateView

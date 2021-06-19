@@ -235,17 +235,17 @@ class LegalDocDeleteViewTest(TestCase):
 
     def test_redirect_if_not_logged_in(self):
         self.client.logout()
+        
         response = self.client.post(
-            reverse("delete", kwargs={"pk": self.test_legaldoc.id})
+            reverse("delete", kwargs={"pk": self.test_legaldoc.id}),
         )
         self.assertRedirects(response, "/?next=/documents/delete/1")
 
-    def test_url_accessible_by_name(self):
+    def test_url_post(self):
         response = self.client.post(
             reverse("delete", kwargs={"pk": self.test_legaldoc.id})
         )
-        #self.assertRedirects(response, 'documents/delete/1')
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/documents/')
 
     def test_uses_correct_template(self):
         response = self.client.get(
