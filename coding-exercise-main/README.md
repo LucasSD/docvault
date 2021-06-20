@@ -31,6 +31,7 @@ Use deletion mixin instead of Delete View
 Add category field for user to categorise uploads and filter
 Order files by time uploaded as well (change fields if needed).
 Check for duplicate file names before uploading (which adds a random sequence to filename)
+Add docstring to explain test fixtures
 Django's Request Factory may be faster than using self.client.get() for tests. 
 Improved login/logout functionality - give user a message that they are logged out?
 Consider changing settings.LOGIN_URL to the appropriate view name
@@ -43,6 +44,7 @@ Consider using 'with.settings' to change storage settings instead of a test_sett
 Set CSRF failure view in settings.py
 Put some built-in error handling views in the url.py file in root directory, to improve UX. 
 Add Tag to admin list for LegalDoc model by adding a function. 
+
 
 ## Getting Started
 

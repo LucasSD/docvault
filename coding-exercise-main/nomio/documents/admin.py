@@ -7,14 +7,14 @@ from .models import LegalDoc, Tag
 class LegalDocAdmin(admin.ModelAdmin):
     """Encapsulate all admin options and functionality for LegalDoc model."""
 
-    list_display = ("doc", "user", "up_date",)
-    list_filter = (
+    list_display = (
+        "doc",
         "user",
         "up_date",
-        "tag"
     )
+    list_filter = ("user", "up_date", "tag")
+
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     """Encapsulate all admin options and functionality for Tag model."""
-

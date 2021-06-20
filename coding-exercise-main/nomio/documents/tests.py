@@ -34,41 +34,43 @@ class LegalDocModelTest(TestCase):
         self.assertEqual(str(self.test_legaldoc.user), "johnsmith")
 
     def test_tag_field(self):
-        test_tag = Tag.objects.create(name="solar")
+        test_tag = Tag.objects.create(name="some_category")
         self.test_legaldoc.tag.add(test_tag)
         self.test_legaldoc.save()
 
         expected_tag = str(
             self.test_legaldoc.tag.all()[0]
         )  # queryset is a list of length one
-        self.assertEqual(expected_tag, "solar")
-
-    
+        self.assertEqual(expected_tag, "some_category")
 
     def test_obj_name(self):  # test __str__
         self.test_legaldoc.doc = self.mock_file
         expected_obj_name = f"{self.test_legaldoc.doc.name} {self.test_legaldoc.user} {self.test_legaldoc.up_date}"
         self.assertEqual(expected_obj_name, str(self.test_legaldoc))
 
+
 class TagModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.test_tag = Tag.objects.create(name = "solar")
+        cls.test_tag = Tag.objects.create(name="some_category")
 
     def test_name_field(self):
-        self.assertEqual(self.test_tag.name, "solar")
+        self.assertEqual(self.test_tag.name, "some_category")
         max_length = self.test_tag._meta.get_field("name").max_length
         self.assertEqual(max_length, 80)
-    
+
     def test_obj_name(self):  # test __str__
         expected_obj_name = f"{self.test_tag.name}"
-        self.assertEqual(expected_obj_name, "solar")
-        
+        self.assertEqual(expected_obj_name, "some_category")
+
 
 class LegalDocListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         test_user = User.objects.create_user(username="johnsmith", password="password")
+        test_tag1 = Tag.objects.create(name="some_category")
+        test_tag2 = Tag.objects.create(name="any_category")
+
         mock_file_pdf = mock.MagicMock(spec=File)
         mock_file_pdf.name = "test.pdf"
 
@@ -81,10 +83,20 @@ class LegalDocListViewTest(TestCase):
         # avoid TypeError on f.write
         mock_file_jpg.read.return_value = "fakecontents"
 
-        # add one PDF and nine JPEG files to database
+        # add first LegalDoc
         LegalDoc.objects.create(doc=mock_file_pdf, user=test_user)
         for i in range(9):
+            # add nine LegalDocs
             LegalDoc.objects.create(doc=mock_file_jpg, user=test_user)
+
+        # add to M2M field directly
+        _ = LegalDoc.objects.get(id=1)
+        _.tag.add(test_tag1)
+        _.save()
+
+        _2 = LegalDoc.objects.get(id=2)
+        _2.tag.add(test_tag2)
+        _2.save()
 
     def setUp(self):
         self.client.force_login(User.objects.get(id=1))
@@ -129,14 +141,17 @@ class LegalDocListViewTest(TestCase):
         response1 = self.client.get(reverse("index"))
         self.assertEqual(response1.status_code, 200)
         self.assertContains(response1, "doc")
+        self.assertContains(response1, "tag")
 
         test_legaldoc1 = response1.context["legaldoc_list"][0]
         self.assertEqual(date.today(), test_legaldoc1.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc1.user))
         self.assertEqual("test.pdf", test_legaldoc1.doc.name)
+        # self.assertEqual("any_category", str(test_legaldoc1.tag))
 
         test_legaldoc2 = response1.context["legaldoc_list"][1]
         self.assertEqual("test.jpg", test_legaldoc2.doc.name)
+        # self.assertEqual("any_category", test_legaldoc2.tag)
 
         # page 2
         response2 = self.client.get(reverse("index") + "?page=2")
@@ -147,7 +162,7 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
         self.assertEqual("test.jpg", test_legaldoc2.doc.name)
-        
+        # self.assertEqual("any_category", test_legaldoc2.tag)
 
 
 class UploadViewTest(TestCase):
@@ -189,6 +204,8 @@ class UploadViewTest(TestCase):
     def test_form_post(self):
         mock_file = mock.MagicMock(spec=File)
         mock_file.name = "test.img"
+
+        # test_tag = Tag.objects.create(name="a_category")
 
         form_entry = {
             "doc": mock_file,
@@ -261,7 +278,7 @@ class LegalDocDeleteViewTest(TestCase):
 
     def test_redirect_if_not_logged_in(self):
         self.client.logout()
-        
+
         response = self.client.post(
             reverse("delete", kwargs={"pk": self.test_legaldoc.id}),
         )
@@ -271,7 +288,7 @@ class LegalDocDeleteViewTest(TestCase):
         response = self.client.post(
             reverse("delete", kwargs={"pk": self.test_legaldoc.id})
         )
-        self.assertRedirects(response, '/documents/')
+        self.assertRedirects(response, "/documents/")
 
     def test_uses_correct_template(self):
         response = self.client.get(
