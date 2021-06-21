@@ -17,6 +17,7 @@
                 <tr>
                     <th>Filename</th>
                     <th>Date Uploaded</th>
+                    <th>Tags</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -36,7 +37,7 @@
                     <!-- file upload date -->
                     <td>{{ file.up_date }}</td>
 
-                    
+                    <td>{{ file.display_tag }}</td>
                     <td>
 
                         {% if file.doc %}

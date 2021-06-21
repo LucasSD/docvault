@@ -1,50 +1,8 @@
-Hi Josh and Jonny
+Hi Josh, Jonny and Andreas
 
-I have written my own _Getting Started_ section below, to run my solution. 
+I just wanted to send you this slightly updated version, although I appreciate you may not have time to look at it. 
 
-Some points to note:
-
-I seriously considered using Notion to journal my progress, since it's what you use at Nomio. I signed up and it certainly looks helpful. I used a virtual environment and version control throughout. 
-
-I have not yet implemented file validation based on MIME. I understand this will be essential before deployment, together with other security improvements.
-
-I have a separate test_settings file. 
-
-I have a setup.cfg file to configure Coverage (and a cvrg.bat file to run it more easily from the terminal). 
-
-I have not tested templates directly, but I have tested the context data sent to them. My understanding is that this is considered sufficient by some, but it would be interesting to discuss this point with you. I wanted to run some integrated tests with Selenium, but ran out of time. I believe some of my tests are somewhat integrated anyway. 
-
-I decided not to include type annotation, but would be interested in your guidance on this (I note that you used it in your initial view included in the exercise). 
-
-## ToDo (from highest to lowest priority, approximately):
-
-Security - validate file uploads using MIME. Or could opening each file (read-only) and checking the bytes to check for file type, be an option? 
-Don't save filename in Nomio database(?).
-Should logout be a button, not a link?
-Use different database?
-Integrated testing with Selenium (all browsers/screen sizes)
-Test templates
-Consider cookie support
-Include all Django auth URLs for user creation, password reset and so on
-Add CI to my version control
-Use deletion mixin instead of Delete View
-Add category field for user to categorise uploads and filter
-Order files by time uploaded as well (change fields if needed).
-Check for duplicate file names before uploading (which adds a random sequence to filename)
-Add docstring to explain test fixtures
-Django's Request Factory may be faster than using self.client.get() for tests. 
-Improved login/logout functionality - give user a message that they are logged out?
-Consider changing settings.LOGIN_URL to the appropriate view name
-Consider changing route for LogoutView
-Add file thumbnails?
-Improve visuals - CSS for all buttons and so on. Improve warning for incorrect file type. 
-Consider creating a test runner
-Consider using mixer (from django.backends) to make my fixtures (fills fields with random values that make your tests more robust)
-Consider using 'with.settings' to change storage settings instead of a test_settings.py file. 
-Set CSRF failure view in settings.py
-Put some built-in error handling views in the url.py file in root directory, to improve UX. 
-Add Tag to admin list for LegalDoc model by adding a function. 
-
+I've improved the visuals slightly and removed redundant code from templates. Multiple file uploads are now possible and I've made a start on implementing 'tags.' The tags do not work fully, as they need to be added in admin and I have not added filtering yet for the user (one test also fails). Setup is the same as before.  
 
 ## Getting Started
 

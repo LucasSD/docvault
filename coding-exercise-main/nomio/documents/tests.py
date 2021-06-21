@@ -90,13 +90,10 @@ class LegalDocListViewTest(TestCase):
             LegalDoc.objects.create(doc=mock_file_jpg, user=test_user)
 
         # add to M2M field directly
-        _ = LegalDoc.objects.get(id=1)
-        _.tag.add(test_tag1)
-        _.save()
-
-        _2 = LegalDoc.objects.get(id=2)
-        _2.tag.add(test_tag2)
-        _2.save()
+        for i in range(1, 11):
+            _ = LegalDoc.objects.get(id=i)
+            _.tag.add(test_tag1, test_tag2)
+            _.save()
 
     def setUp(self):
         self.client.force_login(User.objects.get(id=1))
@@ -141,17 +138,16 @@ class LegalDocListViewTest(TestCase):
         response1 = self.client.get(reverse("index"))
         self.assertEqual(response1.status_code, 200)
         self.assertContains(response1, "doc")
-        self.assertContains(response1, "tag")
 
         test_legaldoc1 = response1.context["legaldoc_list"][0]
         self.assertEqual(date.today(), test_legaldoc1.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc1.user))
         self.assertEqual("test.pdf", test_legaldoc1.doc.name)
-        # self.assertEqual("any_category", str(test_legaldoc1.tag))
+        self.assertEqual("some_category, any_category", test_legaldoc1.display_tag())
 
         test_legaldoc2 = response1.context["legaldoc_list"][1]
         self.assertEqual("test.jpg", test_legaldoc2.doc.name)
-        # self.assertEqual("any_category", test_legaldoc2.tag)
+        self.assertEqual("some_category, any_category", test_legaldoc2.display_tag())
 
         # page 2
         response2 = self.client.get(reverse("index") + "?page=2")
@@ -162,7 +158,6 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
         self.assertEqual("test.jpg", test_legaldoc2.doc.name)
-        # self.assertEqual("any_category", test_legaldoc2.tag)
 
 
 class UploadViewTest(TestCase):
@@ -204,8 +199,6 @@ class UploadViewTest(TestCase):
     def test_form_post(self):
         mock_file = mock.MagicMock(spec=File)
         mock_file.name = "test.img"
-
-        # test_tag = Tag.objects.create(name="a_category")
 
         form_entry = {
             "doc": mock_file,

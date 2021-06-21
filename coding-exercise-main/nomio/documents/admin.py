@@ -11,6 +11,7 @@ class LegalDocAdmin(admin.ModelAdmin):
         "doc",
         "user",
         "up_date",
+        "display_tag"
     )
     list_filter = ("user", "up_date", "tag")
 

@@ -22,6 +22,12 @@ class LegalDoc(models.Model):
         # also avoids pagination ordering warnings
         ordering = ["-up_date"]
 
+    def display_tag(self):
+        """Create a string for Tags. Required to display Tags in Admin."""
+        return ', '.join(tag.name for tag in self.tag.all()[:3])
+
+    display_tag.short_description = 'Tag'
+
     def __str__(self):
         """
         Returns:
