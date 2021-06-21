@@ -89,7 +89,7 @@ class LegalDocListViewTest(TestCase):
             # add nine LegalDocs
             LegalDoc.objects.create(doc=mock_file_jpg, user=test_user)
 
-        # add to M2M field directly
+        # add to M2M fields directly
         for i in range(1, 11):
             _ = LegalDoc.objects.get(id=i)
             _.tag.add(test_tag1, test_tag2)
@@ -158,6 +158,7 @@ class LegalDocListViewTest(TestCase):
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
         self.assertEqual("test.jpg", test_legaldoc2.doc.name)
+        self.assertEqual("some_category, any_category", test_legaldoc.display_tag())
 
 
 class UploadViewTest(TestCase):

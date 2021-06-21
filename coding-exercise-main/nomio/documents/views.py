@@ -42,7 +42,6 @@ def upload(request):
     Returns:
         HttpResponse: Includes blank form in context on GET.
     """
-    form = UserUploadForm()
     if request.method == "POST":
         form = UserUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -52,13 +51,11 @@ def upload(request):
                     obj.tag.add(t)
                 obj.save()
             return render(request, "documents/confirm_upload.html")
-        else:
-            context = {
-                "form": form,
-            }
-            return render(request, "documents/user_upload.html", context)
+
     else:
-        context = {
-            "form": form,
-        }
-        return render(request, "documents/user_upload.html", context)
+        form = UserUploadForm()
+
+    context = {
+        "form": form,
+    }
+    return render(request, "documents/user_upload.html", context)

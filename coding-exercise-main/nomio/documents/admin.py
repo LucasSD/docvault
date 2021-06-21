@@ -7,12 +7,7 @@ from .models import LegalDoc, Tag
 class LegalDocAdmin(admin.ModelAdmin):
     """Encapsulate all admin options and functionality for LegalDoc model."""
 
-    list_display = (
-        "doc",
-        "user",
-        "up_date",
-        "display_tag"
-    )
+    list_display = ("doc", "user", "up_date", "display_tag")
     list_filter = ("user", "up_date", "tag")
 
 
