@@ -28,7 +28,7 @@ class LegalDocDeleteView(LoginRequiredMixin, DeleteView):
     """Delete selected instance from database."""
 
     model = LegalDoc
-    success_url = "/documents"
+    success_url = "/documents/"
 
 
 # conside changing to generic CreateView
@@ -42,22 +42,20 @@ def upload(request):
     Returns:
         HttpResponse: Includes blank form in context on GET.
     """
-    form = UserUploadForm()
     if request.method == "POST":
         form = UserUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            upload_conf = form.save(commit=False)
-            upload_conf.doc = request.FILES["doc"]
-            upload_conf.user = request.user
-            upload_conf.save()
+            for f in request.FILES.getlist("doc"):
+                obj = LegalDoc.objects.create(doc=f, user=request.user)
+                for t in form.cleaned_data["tag"]:
+                    obj.tag.add(t)
+                obj.save()
             return render(request, "documents/confirm_upload.html")
-        else:
-            context = {
-                "form": form,
-            }
-            return render(request, "documents/user_upload.html", context)
+
     else:
-        context = {
-            "form": form,
-        }
-        return render(request, "documents/user_upload.html", context)
+        form = UserUploadForm()
+
+    context = {
+        "form": form,
+    }
+    return render(request, "documents/user_upload.html", context)

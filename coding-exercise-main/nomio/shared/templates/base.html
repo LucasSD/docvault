@@ -6,13 +6,14 @@
   {% block head %}
   <title>Nomio</title>
   <link rel="stylesheet" href="{% static 'nomio.css' %}" />
+  <link rel="stylesheet" href="{% static 'landing/home.css' %}"/>
   {% endblock %}
 </head>
 
 <body>
 
   {% block menu %}
-  <div class="sidenav">
+  <div class="nav">
     <a href="{% url 'index' %}">My Documents</a>
     <br>
     <a href="{% url 'upload' %}">Upload</a>

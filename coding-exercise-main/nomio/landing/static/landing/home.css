@@ -11,7 +11,7 @@ form {
   margin-bottom: 4rem; /* To balance with the logo */
 }
 
-button {
+button, .btn {
   border: none;
   border-radius: 3px;
   background-color: var(--black);
@@ -21,3 +21,11 @@ button {
 
   cursor: pointer;
 }
+
+div.nav a:visited, div span a:visited { 
+  text-decoration: none; 
+  color:blue; 
+ }
+ 
+
+ 

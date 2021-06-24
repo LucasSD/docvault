@@ -13,9 +13,20 @@ class LegalDoc(models.Model):
     # use RESTRICT to avoid unintended data loss
     user = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
 
+    tag = models.ManyToManyField(
+        "Tag",
+        related_name="legaldocs",
+    )
+
     class Meta:
-        # avoids pagination ordering warnings
+        # also avoids pagination ordering warnings
         ordering = ["-up_date"]
+
+    def display_tag(self):
+        """Create a string for Tags. Required to display Tags in Admin."""
+        return ", ".join(tag.name for tag in self.tag.all()[:3])
+
+    display_tag.short_description = "Tag"
 
     def __str__(self):
         """
@@ -23,3 +34,16 @@ class LegalDoc(models.Model):
             str: Filename, name of user and upload date.
         """
         return " ".join([self.doc.name, str(self.user), str(self.up_date)])
+
+
+class Tag(models.Model):
+    """Create a Tag model."""
+
+    name = models.CharField(max_length=80)
+
+    def __str__(self):
+        """
+        Returns:
+            str: name of Tag
+        """
+        return self.name

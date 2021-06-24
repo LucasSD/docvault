@@ -6,20 +6,17 @@ from django.core.files import File
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import LegalDoc
+from .models import LegalDoc, Tag
 
 
 class LegalDocModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        User.objects.create_user(username="johnsmith", password="password")
-        LegalDoc.objects.create(user=User.objects.get(id=1))
+        test_user = User.objects.create_user(username="johnsmith", password="password")
+        LegalDoc.objects.create(user=test_user)
         cls.test_legaldoc = LegalDoc.objects.get(id=1)
         cls.mock_file = mock.MagicMock(spec=File)
         cls.mock_file.name = "test.pdf"
-
-    def test_up_date_field(self):
-        self.assertEqual(self.test_legaldoc.up_date, date.today())
 
     def test_doc_field(self):
 
@@ -27,11 +24,24 @@ class LegalDocModelTest(TestCase):
         # (this creates different mock file names which I am yet to resolve).
         # If resolved, the line below will be redundant.
         self.test_legaldoc.doc = self.mock_file
-        self.assertEqual(self.test_legaldoc.doc.name, self.mock_file.name)
+        self.assertEqual(self.test_legaldoc.doc.name, "test.pdf")
         self.assertEqual(self.test_legaldoc.doc.url, "/media/test.pdf")
+
+    def test_up_date_field(self):
+        self.assertEqual(self.test_legaldoc.up_date, date.today())
 
     def test_user_field(self):
         self.assertEqual(str(self.test_legaldoc.user), "johnsmith")
+
+    def test_tag_field(self):
+        test_tag = Tag.objects.create(name="some_category")
+        self.test_legaldoc.tag.add(test_tag)
+        self.test_legaldoc.save()
+
+        expected_tag = str(
+            self.test_legaldoc.tag.all()[0]
+        )  # queryset is a list of length one
+        self.assertEqual(expected_tag, "some_category")
 
     def test_obj_name(self):  # test __str__
         self.test_legaldoc.doc = self.mock_file
@@ -39,10 +49,28 @@ class LegalDocModelTest(TestCase):
         self.assertEqual(expected_obj_name, str(self.test_legaldoc))
 
 
+class TagModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.test_tag = Tag.objects.create(name="some_category")
+
+    def test_name_field(self):
+        self.assertEqual(self.test_tag.name, "some_category")
+        max_length = self.test_tag._meta.get_field("name").max_length
+        self.assertEqual(max_length, 80)
+
+    def test_obj_name(self):  # test __str__
+        expected_obj_name = f"{self.test_tag.name}"
+        self.assertEqual(expected_obj_name, "some_category")
+
+
 class LegalDocListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        User.objects.create_user(username="johnsmith", password="password")
+        test_user = User.objects.create_user(username="johnsmith", password="password")
+        test_tag1 = Tag.objects.create(name="some_category")
+        test_tag2 = Tag.objects.create(name="any_category")
+
         mock_file_pdf = mock.MagicMock(spec=File)
         mock_file_pdf.name = "test.pdf"
 
@@ -55,9 +83,17 @@ class LegalDocListViewTest(TestCase):
         # avoid TypeError on f.write
         mock_file_jpg.read.return_value = "fakecontents"
 
-        LegalDoc.objects.create(doc=mock_file_pdf, user=User.objects.get(id=1))
+        # add first LegalDoc
+        LegalDoc.objects.create(doc=mock_file_pdf, user=test_user)
         for i in range(9):
-            LegalDoc.objects.create(doc=mock_file_jpg, user=User.objects.get(id=1))
+            # add nine LegalDocs
+            LegalDoc.objects.create(doc=mock_file_jpg, user=test_user)
+
+        # add to M2M fields directly
+        for i in range(1, 11):
+            _ = LegalDoc.objects.get(id=i)
+            _.tag.add(test_tag1, test_tag2)
+            _.save()
 
     def setUp(self):
         self.client.force_login(User.objects.get(id=1))
@@ -101,26 +137,28 @@ class LegalDocListViewTest(TestCase):
         # page 1
         response1 = self.client.get(reverse("index"))
         self.assertEqual(response1.status_code, 200)
-
         self.assertContains(response1, "doc")
 
         test_legaldoc1 = response1.context["legaldoc_list"][0]
         self.assertEqual(date.today(), test_legaldoc1.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc1.user))
         self.assertEqual("test.pdf", test_legaldoc1.doc.name)
+        self.assertEqual("some_category, any_category", test_legaldoc1.display_tag())
 
         test_legaldoc2 = response1.context["legaldoc_list"][1]
         self.assertEqual("test.jpg", test_legaldoc2.doc.name)
+        self.assertEqual("some_category, any_category", test_legaldoc2.display_tag())
 
         # page 2
         response2 = self.client.get(reverse("index") + "?page=2")
         self.assertEqual(response2.status_code, 200)
-
         self.assertContains(response2, "doc")
 
         test_legaldoc = response2.context["legaldoc_list"][0]
-        self.assertEqual("johnsmith", str(test_legaldoc.user))
         self.assertEqual(date.today(), test_legaldoc.up_date)
+        self.assertEqual("johnsmith", str(test_legaldoc.user))
+        self.assertEqual("test.jpg", test_legaldoc2.doc.name)
+        self.assertEqual("some_category, any_category", test_legaldoc.display_tag())
 
 
 class UploadViewTest(TestCase):
@@ -167,14 +205,15 @@ class UploadViewTest(TestCase):
             "doc": mock_file,
         }
 
+        self.assertEqual(LegalDoc.objects.count(), 0)
         response = self.client.post(reverse("upload"), data=form_entry)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(LegalDoc.objects.count(), 1)
 
         test_legaldoc = LegalDoc.objects.get(id=1)
-        self.assertEqual("test.img", test_legaldoc.doc.name)
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
+        self.assertEqual("test.img", test_legaldoc.doc.name)
 
     def test_form_post_file_invalid(self):
         mock_file = mock.MagicMock(spec=File)
@@ -190,11 +229,25 @@ class UploadViewTest(TestCase):
         # check nothing added to database
         self.assertEqual(LegalDoc.objects.count(), 0)
 
+    def test_form_post_multiple_files(self):
+        mock_file1 = mock.MagicMock(spec=File)
+        mock_file1.name = "test.xxx"
+
+        mock_file2 = mock.MagicMock(spec=File)
+        mock_file2.name = "test2.img"
+
+        form_entry = {"doc": (mock_file1, mock_file2)}
+
+        self.assertEqual(LegalDoc.objects.count(), 0)
+        response = self.client.post(reverse("upload"), data=form_entry)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(LegalDoc.objects.count(), 2)
+
 
 class LegalDocDeleteViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        User.objects.create_user(username="johnsmith", password="password")
+        test_user = User.objects.create_user(username="johnsmith", password="password")
         mock_file_png = mock.MagicMock(spec=File)
         mock_file_png.name = "test.png"
 
@@ -207,9 +260,10 @@ class LegalDocDeleteViewTest(TestCase):
         # avoid TypeError on f.write
         mock_file_txt.read.return_value = "fakecontents"
 
-        LegalDoc.objects.create(doc=mock_file_png, user=User.objects.get(id=1))
+        # add one PNG and 3 .txt files to database
+        LegalDoc.objects.create(doc=mock_file_png, user=test_user)
         for i in range(3):
-            LegalDoc.objects.create(doc=mock_file_txt, user=User.objects.get(id=1))
+            LegalDoc.objects.create(doc=mock_file_txt, user=test_user)
 
         cls.test_legaldoc = LegalDoc.objects.get(id=1)
 
@@ -218,16 +272,17 @@ class LegalDocDeleteViewTest(TestCase):
 
     def test_redirect_if_not_logged_in(self):
         self.client.logout()
-        response = self.client.get(
-            reverse("delete", kwargs={"pk": self.test_legaldoc.id})
+
+        response = self.client.post(
+            reverse("delete", kwargs={"pk": self.test_legaldoc.id}),
         )
         self.assertRedirects(response, "/?next=/documents/delete/1")
 
-    def test_url_accessible_by_name(self):
+    def test_url_post(self):
         response = self.client.post(
             reverse("delete", kwargs={"pk": self.test_legaldoc.id})
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/documents/")
 
     def test_uses_correct_template(self):
         response = self.client.get(

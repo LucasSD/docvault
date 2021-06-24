@@ -5,21 +5,11 @@
 
 <body>
     <h1>Your Nomio Documents</h1>
-    <p class="breadcrumb">
-    <p class="breadcrumb-item">
-        <a href="{% static 'landing/home.css' %}"></a>
-
-        <a class="btn btn-sm btn-success" href="{% url 'upload' %}" style="border: none;
-                    border-radius: 3px;
-                    background-color: var(--black);
-                    padding: 0.5rem 1rem;
-                  
-                    color: var(--white);
-                  
-                    cursor: pointer;">Upload</a>
+    <br>
+        <a class="btn" href="{% url 'upload' %}" >Upload</a>
 
     <div class="table-responsive">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="15">
+        <table class="table table-bordered" width="100%" cellspacing="15">
 
             <!--if LegalDocListView returns context variable -->
             {% if legaldoc_list %}
@@ -27,6 +17,7 @@
                 <tr>
                     <th>Filename</th>
                     <th>Date Uploaded</th>
+                    <th>Tags</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -39,17 +30,18 @@
                 <tr>
                     <td>
 
-                        {{ file.doc.name }}
+                        {{ file.doc }}
 
                     </td>
 
                     <!-- file upload date -->
                     <td>{{ file.up_date }}</td>
 
+                    <td>{{ file.display_tag }}</td>
                     <td>
 
                         {% if file.doc %}
-                        <a href="{{ file.doc.url }}" class="btn btn-outline-primary" target="_blank">
+                        <a href="{{ file.doc.url }}" class="btn" target="_blank">
                             View File</a>
                         {% else %}
                         <span class="text-muted">No File</span>
@@ -58,7 +50,7 @@
 
                     <td>
                         {% if file.doc %}
-                        <a href="{{ file.doc.url }}" download class="btn btn-outline-success">
+                        <a href="{{ file.doc.url }}" download class="btn">
                             Download File</a>
                         {% else %}
                         <span class="text-muted">No File</span>
@@ -67,7 +59,7 @@
 
                     <td>
                         {% if file.doc %}
-                        <a href="{% url 'delete' pk=file.pk %}">Delete File</a>
+                        <a href="{% url 'delete' file.pk %}" class="btn" >Delete File</a>
                         {% else %}
                         <span class="text-muted">No File</span>
                         {% endif %}

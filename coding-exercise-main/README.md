@@ -1,20 +1,8 @@
-Hi Josh and Jonny
+Hi Josh, Jonny and Andreas
 
-I have written my own _Getting Started_ section below, to run my solution. 
+I just wanted to send you this slightly updated version, although I appreciate you may not have time to look at it. 
 
-Some points to note:
-
-I seriously considered using Notion to journal my progress, since it's what you use at Nomio. I signed up and it certainly looks helpful. 
-
-I have not yet implemented file validation based on MIME. I understand this will be essential before deployment, togther with other security improvements.
-
-I have a separate test_settings file. 
-
-I have a setup.cfg file to configure Coverage (and a cvrg.bat file to run it more easily from the terminal). 
-
-I have not tested templates directly, but I have tested the context data sent to them. My understanding is that this is considered sufficient by some, but it would be interesting to discuss this point with you. I wanted to run some integrated tests with Selenium, but ran out of time. I believe some of my tests are somewhat integrated anyway. 
-
-I decided not to include type annotation, but would be interested in your guidance on this (I note that you used it in your initial view included in the exercise). 
+I've improved the visuals slightly and removed redundant code from templates and my upload view. Multiple file uploads are now possible and I've made a start on implementing 'tags.' The tags do not work fully, as they need to be created in admin and I have not added filtering yet for the user. Setup is the same as before.  
 
 ## Getting Started
 
