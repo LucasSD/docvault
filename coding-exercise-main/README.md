@@ -1,9 +1,3 @@
-Hi Josh, Jonny and Andreas
-
-I just wanted to send you this slightly updated version, although I appreciate you may not have time to look at it. 
-
-I've improved the visuals slightly and removed redundant code from templates and my upload view. Multiple file uploads are now possible and I've made a start on implementing 'tags.' The tags do not work fully, as they need to be created in admin and I have not added filtering yet for the user. Setup is the same as before.  
-
 ## Getting Started
 
 Please follow the instructions below to run and test my solution. 
