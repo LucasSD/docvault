@@ -1,4 +1,4 @@
-![]()
+![](docvaultcover.png)
 # Introduction
 
 The aim of this project is to create a website to store important documents. Users can only view their own documents if they are correctly logged in. 
