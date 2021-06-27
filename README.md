@@ -27,7 +27,7 @@ Please follow the instructions below to run this application.
 ```pip install -r requirements.txt```
 
 ## Run my tests (all should pass):
-```python manage.py test```
+```python manage.py test --settings=docvault.test_settings```
 
 ## Optional: run Coverage (using batch file) to receive a test coverage report in stdout
 ```cvrg.bat```
