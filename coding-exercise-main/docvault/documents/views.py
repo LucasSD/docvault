@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views import generic
-from django.views.decorators.csrf import csrf_protect
 from django.views.generic.edit import DeleteView
 
 from .forms import UserUploadForm

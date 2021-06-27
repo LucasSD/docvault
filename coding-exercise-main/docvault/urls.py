@@ -1,4 +1,4 @@
-"""nomio URL Configuration
+"""docvault URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -19,8 +19,8 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("", include("nomio.landing.urls")),
-    path("documents/", include("nomio.documents.urls")),
+    path("", include("docvault.landing.urls")),
+    path("documents/", include("docvault.documents.urls")),
     path("admin/", admin.site.urls),
 ]
 
