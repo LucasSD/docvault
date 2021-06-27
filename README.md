@@ -1,7 +1,7 @@
 ![](docvaultcover.png)
 # Introduction
 
-The aim of this project is to create a website to store important documents. Users can only view their own documents if they are correctly logged in. 
+The aim of this project is to create a website to upload and store important documents. Documents can be assigned tags to categorise them (tags must currently be added in admin though). Users can only view their own documents if they are correctly logged in. 
 Once logged in, users can view, download, or delete their documents from the database. Multiple file uploads are possible.   
 
 ## Technologies
