@@ -201,8 +201,13 @@ class UploadViewTest(TestCase):
         mock_file = mock.MagicMock(spec=File)
         mock_file.name = "test.img"
 
+        test_tag1 = Tag(name="XXX")
+        test_tag1.save()
+        test_tag1 = Tag.objects.get(id=1)
+
         form_entry = {
             "doc": mock_file,
+            "Tag": test_tag1, # this may not be correct
         }
 
         self.assertEqual(LegalDoc.objects.count(), 0)
@@ -214,6 +219,7 @@ class UploadViewTest(TestCase):
         self.assertEqual(date.today(), test_legaldoc.up_date)
         self.assertEqual("johnsmith", str(test_legaldoc.user))
         self.assertEqual("test.img", test_legaldoc.doc.name)
+        # self.assertEqual("test.img", test_legaldoc.tag.all()) alway empty queryset
 
     def test_form_post_file_invalid(self):
         mock_file = mock.MagicMock(spec=File)
