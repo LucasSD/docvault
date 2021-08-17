@@ -33,3 +33,49 @@ class LogoutViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "landing/home.html")
         self.assertTemplateUsed(response, "base.html")
+
+class PasswordChangeViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User.objects.create_user(username="johnsmith", password="password")
+
+    def setUp(self):
+        # log user in to avoid redirects
+        self.client.force_login(User.objects.get(id=1))
+
+    def test_url_exists_at_desired_location(self):
+        response = self.client.get("/accounts/password_change/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_url_accessible_by_name(self):
+        response = self.client.get(reverse("password_change"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_uses_correct_template(self):
+        response = self.client.get(reverse("password_change"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "landing/password_change_form.html")
+        self.assertTemplateUsed(response, "base.html")
+
+class PasswordChangeDoneViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User.objects.create_user(username="johnsmith", password="password")
+
+    def setUp(self):
+        # log user in to avoid redirects
+        self.client.force_login(User.objects.get(id=1))
+
+    def test_url_exists_at_desired_location(self):
+        response = self.client.get("/accounts/password_change/done/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_url_accessible_by_name(self):
+        response = self.client.get(reverse("password_change_done"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_uses_correct_template(self):
+        response = self.client.get(reverse("password_change_done"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "landing/password_change_done.html")
+        self.assertTemplateUsed(response, "base.html")
