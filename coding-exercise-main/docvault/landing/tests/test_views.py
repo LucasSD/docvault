@@ -143,7 +143,7 @@ class PasswordResetCompleteViewTest(TestCase):
 class RegisterViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        User.objects.create_user(username="johnsmith", password="password")
+        User.objects.create_user(username="johnsmith", password="password", email = "another@email.com")
 
     def test_url_exists_at_desired_location(self):
         response = self.client.get("/register/")
@@ -158,4 +158,43 @@ class RegisterViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "landing/register.html")
         self.assertTemplateUsed(response, "base.html")
+
+    def test_form_post(self):
+
+        form_entry = {
+             "email": "test@email.com",
+             "username": "lucas",
+             "password1": "testpassword",
+             "password2": "testpassword",                             
+        }
+
+        self.assertEqual(User.objects.count(), 1)
+        response = self.client.post(reverse("register"), data=form_entry)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.count(), 2)
+
+        test_user = User.objects.get(id=2)
+        self.assertEqual(test_user.check_password("testpassword"), True)
+        self.assertEqual("lucas", str(test_user.username))
+        self.assertEqual("test@email.com", test_user.email)
+        self.assertTrue(test_user.is_authenticated)
+
+
+    def test_form_post_invalid_no_email(self):
+        # one user from setup
+        self.assertEqual(User.objects.count(), 1)
+
+        form_entry = {
+             "email": "",
+             "username": "lucas",
+             "password1": "testpassword",
+             "password2": "testpassword",                             
+        }
+
+        response = self.client.post(reverse("register"), data=form_entry)
+        self.assertEqual(response.status_code, 200)
+
+        # check nothing added to database
+        self.assertEqual(User.objects.count(), 1)
+
 
