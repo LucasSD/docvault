@@ -20,7 +20,8 @@ urlpatterns = [
     ),
     path(
         "accounts/password_reset/",
-        auth_views.PasswordResetView.as_view(template_name="landing/password_reset_form.html"),
+        auth_views.PasswordResetView.as_view(template_name="landing/password_reset_form.html", subject_template_name='landing/password_reset_subject.txt',
+        email_template_name='landing/password_reset_email.html',),
         name="password_reset",
     ),
     path(
@@ -33,5 +34,9 @@ urlpatterns = [
         auth_views.PasswordResetConfirmView.as_view(template_name="landing/password_reset_confirm.html"),
         name="password_reset_confirm",
     ),
+    path("accounts/reset/done",
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='landing/password_reset_complete.html'
+         ),name='password_reset_complete')
 ]
 
