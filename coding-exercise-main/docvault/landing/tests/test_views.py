@@ -157,7 +157,7 @@ class RegisterViewTest(TestCase):
         response = self.client.get(reverse("register"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "landing/register.html")
-        self.assertTemplateUsed(response, "base.html")
+        self.assertTemplateUsed(response, "landing/header.html")
 
     def test_form_post(self):
 
