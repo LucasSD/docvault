@@ -139,3 +139,23 @@ class PasswordResetCompleteViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "landing/password_reset_complete.html")
         self.assertTemplateUsed(response, "base.html")
+
+class RegisterViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User.objects.create_user(username="johnsmith", password="password")
+
+    def test_url_exists_at_desired_location(self):
+        response = self.client.get("/register/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_url_accessible_by_name(self):
+        response = self.client.get(reverse("register"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_uses_correct_template(self):
+        response = self.client.get(reverse("register"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "landing/register.html")
+        self.assertTemplateUsed(response, "base.html")
+

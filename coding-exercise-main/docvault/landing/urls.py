@@ -1,5 +1,6 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
+from docvault.landing.views import register
 
 urlpatterns = [
     path("", auth_views.LoginView.as_view(template_name="landing/home.html")),
@@ -37,6 +38,7 @@ urlpatterns = [
     path("accounts/reset/done",
          auth_views.PasswordResetCompleteView.as_view(
              template_name='landing/password_reset_complete.html'
-         ),name='password_reset_complete')
+         ),name='password_reset_complete'),
+    path("register/", register, name="register"),
 ]
 
