@@ -124,4 +124,3 @@ class PasswordResetDoneViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "landing/password_reset_confirm.html")
         self.assertTemplateUsed(response, "base.html")'''
-
