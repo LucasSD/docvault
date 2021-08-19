@@ -36,7 +36,7 @@ SECRET_KEY = "django-insecure-d52l(ba_%ky6dwl*($*sn9%7nwz965=fpt58q(e=!_r!6#i9p7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["docvault-env.eba-5hek3syv.us-west-2.elasticbeanstalk.com"]
 
 
 # Application definition
