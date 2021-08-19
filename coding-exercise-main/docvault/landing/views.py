@@ -15,4 +15,8 @@ def register(request):
             # messages.success(request, "Registration successful.") # not currently showing anywhere
             return redirect(reverse("index"))
         messages.error(request, "Unsuccessful registration. Invalid information.")
-    return render(request=request, template_name="landing/register.html", context={"form": CustomUserCreationForm})
+    return render(
+        request=request,
+        template_name="landing/register.html",
+        context={"form": CustomUserCreationForm},
+    )

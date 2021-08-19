@@ -151,7 +151,7 @@ class UploadViewTest(TestCase):
 
         form_entry = {
             "doc": mock_file,
-            "Tag": test_tag1, # this may not be correct
+            "Tag": test_tag1,  # this may not be correct
         }
 
         self.assertEqual(LegalDoc.objects.count(), 0)
@@ -252,5 +252,3 @@ class LegalDocDeleteViewTest(TestCase):
 
         # test instance with id=1 is deleted
         self.assertFalse(LegalDoc.objects.filter(id=1))
-
-
