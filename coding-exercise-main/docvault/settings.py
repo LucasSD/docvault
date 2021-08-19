@@ -39,6 +39,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["docvault-env.eba-5hek3syv.us-west-2.elasticbeanstalk.com"]
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
