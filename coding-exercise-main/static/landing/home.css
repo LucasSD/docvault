@@ -1,0 +1,31 @@
+.error {
+  color: var(--red);
+}
+
+.notice {
+  color: var(--orange);
+}
+
+form {
+  display: inline-block;
+  margin-bottom: 4rem; /* To balance with the logo */
+}
+
+button, .btn {
+  border: none;
+  border-radius: 3px;
+  background-color: var(--black);
+  padding: 0.5rem 1rem;
+
+  color: var(--white);
+
+  cursor: pointer;
+}
+
+div.nav a:visited, div span a:visited { 
+  text-decoration: none; 
+  color:blue; 
+ }
+ 
+
+ 
