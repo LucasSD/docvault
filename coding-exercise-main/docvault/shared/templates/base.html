@@ -7,6 +7,7 @@
   <title>DocVault</title>
   <link rel="stylesheet" href="{% static 'docvault.css' %}" />
   <link rel="stylesheet" href="{% static 'landing/home.css' %}"/>
+  
   {% endblock %}
 </head>
 
@@ -21,8 +22,11 @@
     <br>
     <a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
     <p>Logged In: {{ user.get_username }}</p>
+    <a href="{% url 'password_change' %}">Change My Password</a>
+  
 
     {% endif %}
+ 
   </div>
 
   {% endblock %}
