@@ -12,7 +12,7 @@ Python 3.9, Django==3.2.3, coverage==5.5, Black
 
 Please follow the instructions below to run this application. 
 
-1 - download this repo as a zip file and unzip it to your working directory.  
+1 - fork this repo and check out branch vanilla-predeploy.  
 2 - install Python 3.9 if you haven't already
 
 
