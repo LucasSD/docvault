@@ -39,6 +39,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["docvault-env.eba-5hek3syv.us-west-2.elasticbeanstalk.com"]
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -140,6 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = "static"
 STATICFILES_DIRS = [BASE_DIR / "shared/static"]
 
 MEDIA_ROOT = BASE_DIR / "media"
