@@ -22,7 +22,7 @@ Please follow the instructions below to run this application.
 
 ```source env/bin/activate```
 
-## Install Django and my other dependencies:
+## Install Django and my other dependencies (ensure you are on branch vanilla-predeploy):
 ## https://pip.pypa.io/en/stable/user_guide/#requirements-files
 ```pip install -r requirements.txt```
 
