@@ -1,6 +1,7 @@
 ![](docvaultcover.png)
 # Introduction
 
+
 The aim of this project was to create a website to upload and store important documents. The website has been deployed using AWS Elastic Beanstalk and is live at http://django-env37.eba-gnbv5cyu.us-west-2.elasticbeanstalk.com/ 
 
 ## To Use
