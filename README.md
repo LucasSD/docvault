@@ -47,7 +47,9 @@ After these commands, you should be able to see the homepage at http://localhost
 
 You will need to create a super user to access the Django admin site and to 
 login (https://docs.djangoproject.com/en/3.2/ref/contrib/admin/): to do this, 
-run `python manage.py createsuperuser --settings=docvault.dev_settings` and follow the instructions.
+run `python manage.py createsuperuser --settings=docvault.dev_settings` and follow the instructions. 
+
+It's a small part of the website's functionality, but for e-mails to send correctly for resetting forgotten passwords, you will need to set up an email server and update the e-mail settings in your dev_settings.py file. You can set them as environment variables or hard code them. I recommend https://www.sendinblue.com because it's free, quick and easy.  
 
 ## Project Status
 
