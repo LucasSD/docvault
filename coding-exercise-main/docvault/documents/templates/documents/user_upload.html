@@ -5,7 +5,7 @@
 <p class="lead">Please select the file(s) you want to upload. <br> Acceptable file formats: [doc, docx, img, jpg,
     pdf, png]. </p>
 <hr class="my-4">
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data" data-ajax="false">
     {% csrf_token %}
     <table>
         {{ form.as_table }}
