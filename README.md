@@ -56,7 +56,7 @@ It's a small part of the website's functionality, but for e-mails to send correc
 Still being developed. 
 ###### To do:
 
-- enable file uploads from mobile devices
+- Enable file uploads from mobile devices
 - Add a way of checking for duplicate file uploads
 - Improve tag functionality, so that users can create tags themselves and filter by them
 - Add an update view, so that the tags for a document can be edited by the user
