@@ -6,7 +6,7 @@ Once logged in, users can view, download, or delete their documents from the dat
 
 ## Technologies
 
-Python 3.9, Django==3.2.3, coverage==5.5, Black
+Python 3.9, Django==3.2.4, coverage==5.5, Black
 
 ## Getting Started
 
