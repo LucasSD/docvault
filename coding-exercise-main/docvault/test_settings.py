@@ -158,4 +158,3 @@ EMAIL_USE_TLS = True
 
 # avoid accessing file system
 DEFAULT_FILE_STORAGE = "inmemorystorage.InMemoryStorage"
-
