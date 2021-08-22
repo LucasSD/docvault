@@ -1,20 +1,23 @@
 ![](docvaultcover.png)
 # Introduction
 
-The aim of this project is to create a website to upload and store important documents. Documents can be assigned tags to categorise them (tags must currently be added in admin though). Users can only view their own documents if they are correctly logged in. 
-Once logged in, users can view, download, or delete their documents from the database. Multiple file uploads are possible.   
+
+The aim of this project was to create a website to upload and store important documents. The website has been deployed using AWS Elastic Beanstalk and is live at http://django-env37.eba-gnbv5cyu.us-west-2.elasticbeanstalk.com/ 
+
+## To Use
+
+The site is fairly self-explanatory. New users must first register and log in. Once logged in, users can upload, view, download, or delete their documents from the database. Multiple file uploads are possible. Users can only view their own documents. Documents can be assigned tags to categorise them on upload (tags must currently be added in admin though). Passwords can be changed when logged in, and can be reset if forgotten via an e-mail link. 
 
 ## Technologies
 
-Python 3.9, Django==3.2.4, coverage==5.5, Black
+Python 3.9, Django==3.2.4, coverage==5.5, Black, AWS Elastic Beanstalk
 
-## Getting Started
+## Getting Started and Contributing
 
-Please follow the instructions below to run this application. 
+Please follow the instructions below to run this application. Feel free to create your own branch, make a change, and submit a pull request. 
 
-1 - fork this repo and check out branch vanilla-predeploy.  
+1 - fork this repository
 2 - install Python 3.9 if you haven't already
-
 
 ## (Optional) Create and use a virtual environment:
 ## https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment
@@ -22,7 +25,7 @@ Please follow the instructions below to run this application.
 
 ```source env/bin/activate```
 
-## Install Django and my other dependencies (ensure you are on branch vanilla-predeploy):
+## Install Django and my other dependencies (ensure you are in the coding-exercise-main directory):
 ## https://pip.pypa.io/en/stable/user_guide/#requirements-files
 ```pip install -r requirements.txt```
 
@@ -33,18 +36,18 @@ Please follow the instructions below to run this application.
 ```cvrg.bat```
 
 ## Build the database:
-```python manage.py migrate```
+```python manage.py migrate --settings=docvault.dev_settings```
 
 ## Start the Django development server:
 ## https://docs.djangoproject.com/en/3.2/ref/django-admin/#django-admin-runserver
-```python manage.py runserver```
+```python manage.py runserver --settings=docvault.dev_settings```
 
 
 After these commands, you should be able to see the homepage at http://localhost:8000/.
 
 You will need to create a super user to access the Django admin site and to 
 login (https://docs.djangoproject.com/en/3.2/ref/contrib/admin/): to do this, 
-run `python manage.py createsuperuser` and follow the instructions.
+run `python manage.py createsuperuser --settings=docvault.dev_settings` and follow the instructions.
 
 ## Project Status
 
