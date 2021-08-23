@@ -35,7 +35,7 @@ BASE_DIR = Path(__file__).resolve().parent
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["docvault37.eba-8bqt95tj.us-west-2.elasticbeanstalk.com"]
 
