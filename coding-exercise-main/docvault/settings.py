@@ -32,12 +32,12 @@ BASE_DIR = Path(__file__).resolve().parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = "dev"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["django-env37.eba-gnbv5cyu.us-west-2.elasticbeanstalk.com"]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -51,7 +51,16 @@ INSTALLED_APPS = [
     "docvault.landing",
     "docvault.documents",
     "crispy_forms",
+    "celery",
+    "docvault.scheduler"
 ]
+
+# set CELERY settings with CELERY_{}
+CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672/" # rabbitmq setting
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC=False
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 

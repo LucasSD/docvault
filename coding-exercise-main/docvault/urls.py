@@ -22,6 +22,7 @@ urlpatterns = [
     path("", include("docvault.landing.urls")),
     path("documents/", include("docvault.documents.urls")),
     path("admin/", admin.site.urls),
+    path('celery/', include('docvault.scheduler.urls')),
 ]
 
 

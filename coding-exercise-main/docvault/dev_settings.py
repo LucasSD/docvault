@@ -51,7 +51,16 @@ INSTALLED_APPS = [
     "docvault.landing",
     "docvault.documents",
     "crispy_forms",
+    "celery",
+    "docvault.scheduler"
 ]
+
+# set CELERY settings with CELERY_{}
+CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672/" # rabbitmq setting
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC=False
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
