@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     "docvault.documents",
     "crispy_forms",
     "celery",
-    "docvault.scheduler"
+    "docvault.scheduler",
+    'django_celery_beat',
 ]
 
 # set CELERY settings with CELERY_{}

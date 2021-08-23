@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "docvault.landing",
     "docvault.documents",
     "crispy_forms",
+
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
