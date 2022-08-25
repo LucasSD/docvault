@@ -2,7 +2,7 @@
 # Introduction
 
 
-The aim of this project was to create a website to upload and store important documents. The website has been deployed using AWS Elastic Beanstalk and is live at https://docvault37.eba-8bqt95tj.us-west-2.elasticbeanstalk.com/
+The aim of this project was to create a website to upload and store important documents. The website is currently not deployed, having been deployed previously using AWS Elastic Beanstalk.
 
 ## To Use
 
@@ -56,6 +56,7 @@ It's a small part of the website's functionality, but for e-mails to send correc
 Still being developed. 
 ###### To do:
 
+- Deploy once again using AWS or similar
 - Enable file uploads from mobile devices
 - Add a way of checking for duplicate file uploads
 - Improve tag functionality, so that users can create tags themselves and filter by them
