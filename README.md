@@ -53,7 +53,7 @@ It's a small part of the website's functionality, but for e-mails to send correc
 
 ## Project Status
 
-Still being developed. 
+On hold. 
 ###### To do:
 
 - Deploy once again using AWS or similar
